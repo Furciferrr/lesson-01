@@ -1,19 +1,26 @@
 import express, { Request, Response } from "express";
 import { getRandomNumber } from "../utils";
 import { bloggers, posts } from "./../data";
-import { Blogger, BloggerBodyType } from "./../types";
+import { Blogger } from "./../types";
+import { BloggerDto } from "../dto";
+import { validateAndConvert } from "../validator";
 
 const router = express.Router();
 
-router.post("/", (req: Request, res: Response) => {
-  const newBlogger: Blogger = {
-    id: getRandomNumber(),
-    name: req.body.name,
-    youtubeUrl: req.body.youtubeUrl,
-    posts: [],
-  };
-  bloggers.push(newBlogger);
-  res.status(201).send(newBlogger);
+router.post("/", async (req: Request, res: Response) => {
+  const conversionResult = await validateAndConvert(BloggerDto, req.body);
+  if (conversionResult.error) {
+    res.status(400).send(conversionResult.error);
+  } else {
+    const newBlogger: Blogger = {
+      id: getRandomNumber(),
+      name: req.body.name,
+      youtubeUrl: req.body.youtubeUrl,
+      posts: [],
+    };
+    bloggers.push(newBlogger);
+    res.status(201).send(newBlogger);
+  }
 });
 
 router.get("/", (req: Request, res: Response) => {
@@ -28,6 +35,26 @@ router.get("/:id", (req: Request, res: Response) => {
     return res.status(404);
   }
   res.send(foundBlogger);
+});
+
+router.put("/:id", (req: Request, res: Response) => {
+  const isBloggerExist = bloggers.findIndex(
+    (blogger) => blogger.id === +req.params.id
+  );
+  if (isBloggerExist === -1) {
+    res.send(404);
+  }
+  bloggers.forEach((blogger) => {
+    if (blogger.id === +req.params.id) {
+      if (req.body.name) {
+        blogger.name = req.body.name;
+      }
+      if (req.body.youtubeUrl) {
+        blogger.youtubeUrl = req.body.youtubeUrl;
+      }
+      res.send(204);
+    }
+  });
 });
 
 export default router;
