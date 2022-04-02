@@ -2,7 +2,6 @@ export interface Blogger<T = Post> {
   id: number;
   name: string;
   youtubeUrl: string;
-  posts: Array<T>;
 }
 
 export interface Post {
@@ -11,7 +10,7 @@ export interface Post {
   shortDescription: string;
   content: string;
   bloggerId: number;
-  blog: Blogger<string>;
+  bloggerName: string;
 }
 
 enum Errors {

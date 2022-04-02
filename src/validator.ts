@@ -8,6 +8,7 @@ class ValidationResult {
 }
 
 function formatError(errors: ValidationError[]): ErrorType {
+  console.log(errors)
   return "error" as any;
 }
 

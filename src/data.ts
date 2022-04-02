@@ -4,22 +4,7 @@ export let bloggers: Array<Blogger> = [
   {
     id: 1,
     name: "Dimych",
-    youtubeUrl: "it-kamasutra",
-    posts: [
-      {
-        id: 1,
-        title: "Hello all",
-        shortDescription: "short description",
-        content: "post content",
-        bloggerId: 1,
-        blog: {
-          id: 1,
-          name: "Dimych",
-          youtubeUrl: "it-kamasutra",
-          posts: ["Hello all"],
-        },
-      },
-    ],
+    youtubeUrl: "https://it-kamasutra.com",
   },
 ];
 
@@ -30,11 +15,6 @@ export let posts: Array<Post> = [
     shortDescription: "short description",
     content: "post content",
     bloggerId: 1,
-    blog: {
-      id: 1,
-      name: "Dimych",
-      youtubeUrl: "it-kamasutra",
-      posts: ["Hello all"],
-    },
+    bloggerName: 'Dimych',
   },
 ];

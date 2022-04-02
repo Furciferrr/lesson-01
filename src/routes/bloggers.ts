@@ -16,7 +16,6 @@ router.post("/", async (req: Request, res: Response) => {
       id: getRandomNumber(),
       name: req.body.name,
       youtubeUrl: req.body.youtubeUrl,
-      posts: [],
     };
     bloggers.push(newBlogger);
     res.status(201).send(newBlogger);
@@ -31,8 +30,9 @@ router.get("/:id", (req: Request, res: Response) => {
   const foundBlogger = bloggers.find(
     (blogger) => blogger.id === +req.params.id
   );
+  
   if (!foundBlogger) {
-    return res.status(404);
+    return res.status(404).send();
   }
   res.send(foundBlogger);
 });
@@ -55,6 +55,24 @@ router.put("/:id", (req: Request, res: Response) => {
       res.send(204);
     }
   });
+});
+
+router.delete("/:id", (req: Request, res: Response) => {
+  const indexForRemove = bloggers.findIndex(
+    (blogger) => blogger.id === +req.params.id
+  );
+  if (indexForRemove === -1) {
+    res.send(404);
+  }
+  posts.forEach((post, index) => {
+    if (post.bloggerId === bloggers[indexForRemove].id) {
+      posts.splice(index, 1);
+    }
+  });
+
+  bloggers.splice(indexForRemove, 1);
+
+  res.send(204);
 });
 
 export default router;
