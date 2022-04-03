@@ -25,12 +25,12 @@ export interface BloggerBodyType {
 }
 
 export interface ErrorType {
-  type: string;
-  title: string;
-  status: Errors;
-  detail: string;
-  instance: string;
-  additionalProp1?: string;
-  additionalProp2?: string;
-  additionalProp3?: string;
+  data: {};
+  errorsMessages: 
+    {
+      message: string;
+      field: string;
+    }[]
+  ;
+  resultCode: 0 | 1 | 2;
 }

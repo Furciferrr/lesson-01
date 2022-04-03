@@ -31,3 +31,8 @@ export class UpdatePostDto {
   @IsNotEmpty()
   readonly content: string;
 }
+
+export class VideoDto {
+  @IsNotEmpty({ message: "title field is required" })
+  readonly title: string;
+}

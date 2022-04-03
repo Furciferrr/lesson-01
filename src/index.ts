@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import bloggersRouter from "./routes/bloggers"
 import postsRouter from "./routes/posts"
+import videosRouter from "./routes/videos"
 
 
 const app = express();
@@ -13,6 +14,7 @@ app.use(bodyParser.json());
 
 app.use('/bloggers', bloggersRouter);
 app.use('/posts', postsRouter);
+app.use('/videos', videosRouter);
 
 
 app.get("/", (req: Request, res: Response) => {

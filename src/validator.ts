@@ -8,8 +8,14 @@ class ValidationResult {
 }
 
 function formatError(errors: ValidationError[]): ErrorType {
-  console.log(errors)
-  return "error" as any;
+  return {
+    data: {},
+    errorsMessages: errors.map((err) => ({
+      field: err.property,
+      message: err.constraints?.isNotEmpty || err.constraints?.matches || "",
+    })),
+    resultCode: 1,
+  };
 }
 
 export async function validateAndConvert(classToConvert: any, body: string) {
@@ -17,11 +23,7 @@ export async function validateAndConvert(classToConvert: any, body: string) {
   result.data = plainToClass(classToConvert, body);
   const errors = await validate(result.data);
   if (errors.length > 0) {
-    let errorTexts = Array();
-    for (const errorItem of errors) {
-      errorTexts = errorTexts.concat(errorItem.constraints);
-    }
-    result.error = errorTexts;
+    result.error = formatError(errors);
     return result;
   }
   return result;
