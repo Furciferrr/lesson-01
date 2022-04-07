@@ -12,7 +12,11 @@ function formatError(errors: ValidationError[]): ErrorType {
     data: {},
     errorsMessages: errors.map((err) => ({
       field: err.property,
-      message: err.constraints?.isNotEmpty || err.constraints?.matches || "",
+      message:
+        err.constraints?.isNotEmpty ||
+        err.constraints?.matches ||
+        err.constraints?.whitelistValidation ||
+        "",
     })),
     resultCode: 1,
   };
@@ -21,7 +25,10 @@ function formatError(errors: ValidationError[]): ErrorType {
 export async function validateAndConvert(classToConvert: any, body: string) {
   const result = new ValidationResult();
   result.data = plainToClass(classToConvert, body);
-  const errors = await validate(result.data);
+  const errors = await validate(result.data, {
+    whitelist: true,
+    forbidNonWhitelisted: true,
+  });
   if (errors.length > 0) {
     result.error = formatError(errors);
     return result;

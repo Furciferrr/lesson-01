@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { PostDto, UpdatePostDto } from "../dto";
+import { postRepository } from "../repositories/posts-repository";
 import { Post } from "../types";
 import { getRandomNumber } from "../utils";
 import { validateAndConvert } from "../validator";
@@ -29,11 +30,12 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 router.get("/", (req: Request, res: Response) => {
+  const posts = postRepository.getPosts();
   res.send(posts);
 });
 
 router.get("/:id", (req: Request, res: Response) => {
-  const foundPost = posts.find((post) => post.id === +req.params.id);
+  const foundPost = postRepository.getPostById(+req.params.id);
 
   if (!foundPost) {
     return res.status(404).send();
@@ -51,28 +53,32 @@ router.put("/:id", async (req: Request, res: Response) => {
     return res.status(400).send(conversionResult.error);
   }
 
-  const { title, shortDescription, content } = req.body;
+  //const { title, shortDescription, content } = req.body;
 
-  const newPost = {
+  /* const newPost = {
     ...posts[indexOfPost],
     title,
     shortDescription,
     content,
+  }; */
+  const newPost = {
+    ...posts[indexOfPost],
+    ...req.body,
   };
 
   Object.assign(posts[indexOfPost], newPost);
-  res.send(204);
+  res.send(newPost);
 });
 
 router.delete("/:id", (req: Request, res: Response) => {
-  const indexForRemove = posts.findIndex((post) => post.id === +req.params.id);
-  if (indexForRemove === -1) {
-    res.send(404);
+  const isRemoved = postRepository.deletePostById(+req.params.id);
+  if (!isRemoved) {
+    res.sendStatus(404);
   }
 
-  posts.splice(indexForRemove, 1);
-
-  res.send(204);
+  if (isRemoved) {
+    res.send(204);
+  }
 });
 
 export default router;
