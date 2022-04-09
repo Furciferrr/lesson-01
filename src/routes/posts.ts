@@ -13,19 +13,10 @@ router.post("/", async (req: Request, res: Response) => {
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   }
-  const blogger = bloggers.find((blogger) => blogger.id === req.body.bloggerId);
-  if (!blogger) {
-    return res.status(404).send("blogger not exist");
+  const newPost = postRepository.createPost(req.body);
+  if (!newPost) {
+    return res.status(404).send();
   }
-  const newPost: Post = {
-    id: getRandomNumber(),
-    title: req.body.title,
-    shortDescription: req.body.shortDescription,
-    content: req.body.content,
-    bloggerId: req.body.bloggerId,
-    bloggerName: blogger.name,
-  };
-  posts.push(newPost);
   res.status(201).send(newPost);
 });
 
@@ -44,30 +35,18 @@ router.get("/:id", (req: Request, res: Response) => {
 });
 
 router.put("/:id", async (req: Request, res: Response) => {
-  const indexOfPost = posts.findIndex((post) => post.id === +req.params.id);
-  if (indexOfPost === -1) {
-    res.send(404);
-  }
   const conversionResult = await validateAndConvert(UpdatePostDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   }
 
-  //const { title, shortDescription, content } = req.body;
+  const updatedPost = postRepository.updatePostById(+req.params.id, req.body);
 
-  /* const newPost = {
-    ...posts[indexOfPost],
-    title,
-    shortDescription,
-    content,
-  }; */
-  const newPost = {
-    ...posts[indexOfPost],
-    ...req.body,
-  };
+  if (!updatedPost) {
+    res.send(404);
+  }
 
-  Object.assign(posts[indexOfPost], newPost);
-  res.send(newPost);
+  res.send(updatedPost);
 });
 
 router.delete("/:id", (req: Request, res: Response) => {

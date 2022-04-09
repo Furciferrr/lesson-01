@@ -1,14 +1,9 @@
 import { bloggersRepository } from "./../repositories/bloggers-repository";
 import express, { Request, Response } from "express";
-import { getRandomNumber } from "../utils";
-import { bloggers, posts } from "./../data";
-import { Blogger } from "./../types";
 import { BloggerDto } from "../dto";
 import { validateAndConvert } from "../validator";
 
 const router = express.Router();
-
-
 
 router.get("/", (req: Request, res: Response) => {
   const bloggers = bloggersRepository.getBloggers();
@@ -24,24 +19,21 @@ router.get("/:id", (req: Request, res: Response) => {
   res.send(foundBlogger);
 });
 
-router.put("/:id", (req: Request, res: Response) => {
-  const isBloggerExist = bloggers.findIndex(
-    (blogger) => blogger.id === +req.params.id
+router.put("/:id", async (req: Request, res: Response) => {
+  const conversionResult = await validateAndConvert(BloggerDto, req.body);
+  if (conversionResult.error) {
+    return res.status(400).send(conversionResult.error);
+  }
+
+  const newBlogger = bloggersRepository.updateBloggerById(
+    +req.params.id,
+    req.body
   );
-  if (isBloggerExist === -1) {
+  if (!newBlogger) {
     res.sendStatus(404);
   }
-  bloggers.forEach((blogger) => {
-    if (blogger.id === +req.params.id) {
-      if (req.body.name) {
-        blogger.name = req.body.name;
-      }
-      if (req.body.youtubeUrl) {
-        blogger.youtubeUrl = req.body.youtubeUrl;
-      }
-      res.sendStatus(204);
-    }
-  });
+
+  res.sendStatus(201);
 });
 
 router.post("/", async (req: Request, res: Response) => {
@@ -49,12 +41,10 @@ router.post("/", async (req: Request, res: Response) => {
   if (conversionResult.error) {
     res.status(400).send(conversionResult.error);
   } else {
-    const newBlogger: Blogger = {
-      id: getRandomNumber(),
-      name: req.body.name,
-      youtubeUrl: req.body.youtubeUrl,
-    };
-    bloggers.push(newBlogger);
+    const newBlogger = bloggersRepository.createBlogger(req.body);
+    if (!newBlogger) {
+      res.sendStatus(400);
+    }
     res.status(201).send(newBlogger);
   }
 });

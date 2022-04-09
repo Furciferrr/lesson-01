@@ -1,7 +1,12 @@
 import { BloggerDto } from "../dto";
+import { Blogger } from "../types";
+import { getRandomNumber } from "../utils";
 import { bloggers, posts } from "./db";
 
 export const bloggersRepository = {
+  getIndexById(id: number) {
+    return bloggers.findIndex((blogger) => blogger.id === id);
+  },
   getBloggers() {
     return bloggers;
   },
@@ -9,7 +14,7 @@ export const bloggersRepository = {
     return bloggers.find((video) => video.id === id);
   },
   deleteBloggerById(id: number) {
-    const indexForRemove = bloggers.findIndex((blogger) => blogger.id === id);
+    const indexForRemove = this.getIndexById(id);
     if (indexForRemove === -1) {
       return false;
     }
@@ -22,10 +27,24 @@ export const bloggersRepository = {
     return true;
   },
   updateBloggerById(id: number, dto: BloggerDto) {
-    const index = bloggers.findIndex((blogger) => blogger.id === id);
+    const index = this.getIndexById(id);
     if (index === -1) {
       return false;
     }
+    const updatedBlogger = {
+      ...bloggers[index],
+      ...dto,
+    };
+    bloggers[index] = updatedBlogger;
+    return true;
   },
-  createBlogger(updateBlogger: BloggerDto) {},
+  createBlogger(blogger: BloggerDto) {
+    const newBlogger: Blogger = {
+      id: getRandomNumber(),
+      name: blogger.name,
+      youtubeUrl: blogger.youtubeUrl,
+    };
+    bloggers.push(newBlogger);
+    return newBlogger;
+  },
 };

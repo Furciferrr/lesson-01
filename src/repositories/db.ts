@@ -23,6 +23,5 @@ export let posts: Array<Post> = [
 	  shortDescription: "short description",
 	  content: "post content",
 	  bloggerId: 1,
-	  bloggerName: 'Dimych',
 	},
   ];
