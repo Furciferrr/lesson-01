@@ -7,19 +7,26 @@ class ValidationResult {
   error: any;
 }
 
+const getKeys = <T extends {}>(obj?: T) => {
+  if (!obj) {
+    return null;
+  }
+  return Object.keys(obj);
+};
+
 function formatError(errors: ValidationError[]): ErrorType {
   return {
     data: {},
-    errorsMessages: errors.map((err) => ({
-      field: err.property,
-      message:
-        err.constraints?.isNotEmpty ||
-        err.constraints?.matches ||
-        err.constraints?.whitelistValidation ||
-        "",
-    })),
+    errorsMessages: errors.map((err) => {
+      const errKey = getKeys(err.constraints)?.[0];
+      const errorMessage = errKey ? err.constraints?.[errKey] : "";
+      return {
+        message: errorMessage,
+        field: err.property,
+      };
+    }),
     resultCode: 1,
-  };
+  } as any;
 }
 
 export async function validateAndConvert(classToConvert: any, body: string) {

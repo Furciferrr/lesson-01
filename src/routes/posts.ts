@@ -1,10 +1,7 @@
 import express, { Request, Response } from "express";
 import { PostDto, UpdatePostDto } from "../dto";
 import { postRepository } from "../repositories/posts-repository";
-import { Post } from "../types";
-import { getRandomNumber } from "../utils";
 import { validateAndConvert } from "../validator";
-import { bloggers, posts } from "./../data";
 
 const router = express.Router();
 
