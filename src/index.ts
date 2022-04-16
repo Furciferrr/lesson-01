@@ -5,10 +5,13 @@ import bloggersRouter from "./routes/bloggers";
 import postsRouter from "./routes/posts";
 import videosRouter from "./routes/videos";
 import { runDb } from "./repositories/db-config";
+import { authMiddleware } from "./middlewares/auth-middleware";
 
 const app = express();
 const port = 5000;
 
+
+app.use(authMiddleware)
 app.use(cors());
 app.use(bodyParser.json());
 

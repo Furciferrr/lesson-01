@@ -8,6 +8,6 @@ export const authMiddleware = (
   if (req.query.token === "123") {
     next();
   } else {
-    res.send(401);
+    res.sendStatus(401);
   }
 };
