@@ -1,4 +1,4 @@
-export interface Blogger<T = Post> {
+export interface Blogger {
   id: number;
   name: string;
   youtubeUrl: string;
@@ -10,6 +10,12 @@ export interface Post {
   shortDescription: string;
   content: string;
   bloggerId: number;
+}
+
+export interface VideoType {
+  id: number;
+  title: string;
+  author: string;
 }
 
 enum Errors {
@@ -25,11 +31,9 @@ export interface BloggerBodyType {
 
 export interface ErrorType {
   data: {};
-  errorsMessages: 
-    {
-      message: string;
-      field: string;
-    }[]
-  ;
+  errorsMessages: {
+    message: string;
+    field: string;
+  }[];
   resultCode: 0 | 1 | 2;
 }

@@ -1,17 +1,20 @@
 import { bloggersRepository } from "./../repositories/bloggers-repository";
 import express, { Request, Response } from "express";
-import { BloggerDto } from "../dto";
+import { BloggerDto, UpdateBloggerDto } from "../dto";
 import { validateAndConvert } from "../validator";
+import { Blogger } from "../types";
+import { WithId } from "mongodb";
 
 const router = express.Router();
 
-router.get("/", (req: Request, res: Response) => {
-  const bloggers = bloggersRepository.getBloggers();
+router.get("/", async (req: Request, res: Response) => {
+  const bloggers = await bloggersRepository.getBloggers();
+  
   res.send(bloggers);
 });
 
-router.get("/:id", (req: Request, res: Response) => {
-  const foundBlogger = bloggersRepository.deleteBloggerById(+req.params.id);
+router.get("/:id", async (req: Request, res: Response) => {
+  const foundBlogger = await bloggersRepository.getBloggerById(+req.params.id);
 
   if (!foundBlogger) {
     return res.status(404).send();
@@ -20,12 +23,12 @@ router.get("/:id", (req: Request, res: Response) => {
 });
 
 router.put("/:id", async (req: Request, res: Response) => {
-  const conversionResult = await validateAndConvert(BloggerDto, req.body);
+  const conversionResult = await validateAndConvert(UpdateBloggerDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   }
 
-  const newBlogger = bloggersRepository.updateBloggerById(
+  const newBlogger = await bloggersRepository.updateBloggerById(
     +req.params.id,
     req.body
   );
@@ -33,7 +36,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     res.sendStatus(404);
   }
 
-  res.sendStatus(201);
+  res.sendStatus(204);
 });
 
 router.post("/", async (req: Request, res: Response) => {
@@ -41,7 +44,7 @@ router.post("/", async (req: Request, res: Response) => {
   if (conversionResult.error) {
     res.status(400).send(conversionResult.error);
   } else {
-    const newBlogger = bloggersRepository.createBlogger(req.body);
+    const newBlogger = await bloggersRepository.createBlogger(req.body);
     if (!newBlogger) {
       res.sendStatus(400);
     }
@@ -49,8 +52,8 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", (req: Request, res: Response) => {
-  const result = bloggersRepository.deleteBloggerById(+req.params.id);
+router.delete("/:id", async (req: Request, res: Response) => {
+  const result = await bloggersRepository.deleteBloggerById(+req.params.id);
   if (!result) {
     res.sendStatus(404);
   }

@@ -1,50 +1,51 @@
+import { ObjectId, WithId } from "mongodb";
 import { BloggerDto } from "../dto";
-import { Blogger } from "../types";
+import { Blogger, Post } from "../types";
 import { getRandomNumber } from "../utils";
-import { bloggers, posts } from "./db";
+import { bloggersCollection } from "./db-config";
 
 export const bloggersRepository = {
-  getIndexById(id: number) {
-    return bloggers.findIndex((blogger) => blogger.id === id);
+  removeId<T extends { _id: ObjectId }>(array: T[]): Omit<T, "_id">[] {
+    return array.map((item) => {
+      const { _id, ...other } = item;
+      return other;
+    });
   },
-  getBloggers() {
+  async getBloggers(): Promise<Array<Blogger>> {
+    const bloggers: Array<Blogger> = await bloggersCollection
+      .find({}, { projection: { _id: 0 } })
+      .toArray();
     return bloggers;
   },
-  getBloggerById(id: number) {
-    return bloggers.find((video) => video.id === id);
+  async getBloggerById(id: number): Promise<Blogger | null> {
+    const bloggers: Blogger | null = await bloggersCollection
+      .findOne({ id }, { projection: { _id: 0 } })
+    return bloggers;
   },
-  deleteBloggerById(id: number) {
-    const indexForRemove = this.getIndexById(id);
-    if (indexForRemove === -1) {
+  async deleteBloggerById(id: number): Promise<boolean> {
+    try {
+      const result = await bloggersCollection.deleteOne({ id });
+      return result.deletedCount === 1;
+    } catch (e) {
       return false;
     }
-    posts.forEach((post, index) => {
-      if (post.bloggerId === bloggers[indexForRemove].id) {
-        posts.splice(index, 1);
-      }
-    });
-    bloggers.splice(indexForRemove, 1);
-    return true;
   },
-  updateBloggerById(id: number, dto: BloggerDto) {
-    const index = this.getIndexById(id);
-    if (index === -1) {
-      return false;
-    }
-    const updatedBlogger = {
-      ...bloggers[index],
-      ...dto,
-    };
-    bloggers[index] = updatedBlogger;
-    return true;
+  async updateBloggerById(id: number, dto: BloggerDto): Promise<boolean> {
+    const result = await bloggersCollection.updateOne(
+      { id },
+      { $set: { ...dto } }
+    );
+    return result.modifiedCount === 1;
   },
-  createBlogger(blogger: BloggerDto) {
+  async createBlogger(blogger: BloggerDto): Promise<Blogger> {
     const newBlogger: Blogger = {
       id: getRandomNumber(),
       name: blogger.name,
       youtubeUrl: blogger.youtubeUrl,
     };
-    bloggers.push(newBlogger);
+    await bloggersCollection.insertOne(newBlogger, {
+      forceServerObjectId: true,
+    });
     return newBlogger;
   },
 };

@@ -9,6 +9,19 @@ export class BloggerDto {
   readonly youtubeUrl: string;
 }
 
+export class UpdateBloggerDto {
+  @IsOptional()
+  @IsNotEmpty({ message: "should be not empty" })
+  readonly name: string;
+
+  @IsOptional()
+  @IsNotEmpty({ message: "youtubeUrl should be not empty" })
+  @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]+/gm), {
+    message: "URL Not Valid",
+  })
+  readonly youtubeUrl: string;
+}
+
 export class PostDto {
   @IsNotEmpty({ message: "title field is required" })
   readonly title: string;

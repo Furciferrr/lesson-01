@@ -2,41 +2,28 @@ import { PostDto, UpdatePostDto } from "../dto";
 import { Post } from "../types";
 import { getRandomNumber } from "../utils";
 import { bloggersRepository } from "./bloggers-repository";
-import { posts } from "./db";
+import { postsCollection } from "./db-config";
 
 export const postRepository = {
-  getIndexById(id: number) {
-    return posts.findIndex((post) => post.id === id);
+  async getPosts(): Promise<Post[]> {
+    return postsCollection.find({}, { projection: { _id: 0 } }).toArray();
   },
-  getPosts() {
-    return posts;
+  async getPostById(id: number): Promise<Post | null> {
+    return postsCollection.findOne({ id }, { projection: { _id: 0 } });
   },
-  getPostById(id: number) {
-    return posts.find((post) => post.id === id);
+  async deletePostById(id: number): Promise<boolean> {
+    const result = await postsCollection.deleteOne({ id });
+    return result.deletedCount === 1;
   },
-  deletePostById(id: number) {
-    const indexForRemove = this.getIndexById(id);
-    if (indexForRemove === -1) {
-      return false;
-    }
-    posts.splice(indexForRemove, 1);
-    return true;
+  async updatePostById(id: number, postDto: UpdatePostDto): Promise<boolean> {
+    const result = await postsCollection.updateOne(
+      { id },
+      { $set: { ...postDto } }
+    );
+    return result.modifiedCount === 1;
   },
-  updatePostById(id: number, postDto: UpdatePostDto) {
-    const postIndex = this.getIndexById(id);
-    if (postIndex === -1) {
-      return false;
-    }
-    const newPost = {
-      ...posts[postIndex],
-      ...postDto,
-    };
-
-    posts[postIndex] = newPost;
-    return posts[postIndex];
-  },
-  createPost(postDto: PostDto) {
-    const blogger = bloggersRepository.getBloggerById(postDto.bloggerId);
+  async createPost(postDto: PostDto) {
+    const blogger = await bloggersRepository.getBloggerById(postDto.bloggerId);
     if (!blogger) {
       return false;
     }
@@ -47,7 +34,9 @@ export const postRepository = {
       content: postDto.content,
       bloggerId: postDto.bloggerId,
     };
-    posts.push(newPost);
+    await postsCollection.insertOne(newPost, {
+      forceServerObjectId: true,
+    });
     return newPost;
   },
 };

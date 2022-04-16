@@ -10,20 +10,20 @@ router.post("/", async (req: Request, res: Response) => {
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   }
-  const newPost = postRepository.createPost(req.body);
+  const newPost = await postRepository.createPost(req.body);
   if (!newPost) {
     return res.status(404).send();
   }
   res.status(201).send(newPost);
 });
 
-router.get("/", (req: Request, res: Response) => {
-  const posts = postRepository.getPosts();
+router.get("/", async (req: Request, res: Response) => {
+  const posts = await postRepository.getPosts();
   res.send(posts);
 });
 
-router.get("/:id", (req: Request, res: Response) => {
-  const foundPost = postRepository.getPostById(+req.params.id);
+router.get("/:id", async (req: Request, res: Response) => {
+  const foundPost = await postRepository.getPostById(+req.params.id);
 
   if (!foundPost) {
     return res.status(404).send();
@@ -37,17 +37,17 @@ router.put("/:id", async (req: Request, res: Response) => {
     return res.status(400).send(conversionResult.error);
   }
 
-  const updatedPost = postRepository.updatePostById(+req.params.id, req.body);
+  const updatedPost = await postRepository.updatePostById(+req.params.id, req.body);
 
   if (!updatedPost) {
     res.send(404);
   }
 
-  res.send(updatedPost);
+  res.sendStatus(204);
 });
 
-router.delete("/:id", (req: Request, res: Response) => {
-  const isRemoved = postRepository.deletePostById(+req.params.id);
+router.delete("/:id", async (req: Request, res: Response) => {
+  const isRemoved = await postRepository.deletePostById(+req.params.id);
   if (!isRemoved) {
     res.sendStatus(404);
   }

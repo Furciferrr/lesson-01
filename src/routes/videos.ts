@@ -5,13 +5,13 @@ import { validateAndConvert } from "../validator";
 
 const router = express.Router();
 
-router.get("/", (req: Request, res: Response) => {
-  const videos = videosRepository.getVideos();
+router.get("/", async (req: Request, res: Response) => {
+  const videos = await videosRepository.getVideos();
   res.send(videos);
 });
 
-router.get("/:id", (req: Request, res: Response) => {
-  const foundVideo = videosRepository.getVideoById(+req.params.id);
+router.get("/:id", async (req: Request, res: Response) => {
+  const foundVideo = await videosRepository.getVideoById(+req.params.id);
   if (!foundVideo) {
     return res.send(404);
   }
@@ -23,15 +23,15 @@ router.post("/", async (req: Request, res: Response) => {
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   }
-  const newVideo = videosRepository.createVideo(req.body.title);
+  const newVideo = await videosRepository.createVideo(req.body.title);
   if (!newVideo) {
     res.send(404);
   }
   res.status(201).send(newVideo);
 });
 
-router.delete("/:id", (req: Request, res: Response) => {
-  const isDeleted = videosRepository.deleteVideoById(+req.params.id);
+router.delete("/:id", async (req: Request, res: Response) => {
+  const isDeleted = await videosRepository.deleteVideoById(+req.params.id);
   if (!isDeleted) {
     res.send(404);
   }
@@ -43,14 +43,14 @@ router.put("/:id", async (req: Request, res: Response) => {
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   }
-  const updatedVideo = videosRepository.updateVideoById(
+  const updatedVideo = await videosRepository.updateVideoById(
     +req.params.id,
     req.body.title
   );
   if (!updatedVideo) {
     res.send(404);
   }
-  res.send(updatedVideo);
+  res.sendStatus(204);
 });
 
 export default router;

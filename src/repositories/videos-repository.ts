@@ -1,35 +1,34 @@
-import { videos } from "./db";
+import { WithId } from "mongodb";
+import { VideoType } from "../types";
+import { videosCollection } from "./db-config";
 
 export const videosRepository = {
-  getVideos() {
-    return videos;
+  async getVideos(): Promise<VideoType[]> {
+    return videosCollection.find({}, { projection: { _id: 0 } }).toArray();
   },
-  getVideoById(id: number) {
-    return videos.find((video) => video.id === id);
+  async getVideoById(id: number) {
+    return videosCollection.findOne({ id }, { projection: { _id: 0 } });
   },
-  deleteVideoById(id: number) {
-    const indexForRemove = videos.findIndex((video) => video.id === id);
-    if (indexForRemove === -1) {
-      return false;
-    }
-    videos.splice(indexForRemove, 1);
-    return true;
+  async deleteVideoById(id: number): Promise<boolean> {
+    const result = await videosCollection.deleteOne({ id });
+    return result.deletedCount === 1;
   },
-  updateVideoById(id: number, title: string) {
-    const index = videos.findIndex((video) => video.id === id);
-    if (index === -1) {
-      return false;
-    }
-    videos[index].title = title;
-    return videos[index];
+  async updateVideoById(id: number, title: string): Promise<boolean> {
+    const result = await videosCollection.updateOne(
+      { id },
+      { $set: { title } }
+    );
+    return result.modifiedCount === 1;
   },
-  createVideo(title: string) {
+  async createVideo(title: string): Promise<VideoType> {
     const newVideo = {
       id: +new Date(),
       title: title,
       author: "it-incubator.eu",
     };
-    videos.push(newVideo);
+    await videosCollection.insertOne(newVideo, {
+      forceServerObjectId: true,
+    });
     return newVideo;
   },
 };
