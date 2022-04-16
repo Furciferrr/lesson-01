@@ -36,11 +36,13 @@ export const bloggersRepository = {
     }
   },
   async updateBloggerById(id: number, dto: BloggerDto): Promise<boolean> {
+    
     const result = await bloggersCollection.updateOne(
       { id },
       { $set: { ...dto } }
     );
-    return result.modifiedCount === 1;
+
+    return result.matchedCount === 1;
   },
   async createBlogger(blogger: BloggerDto): Promise<Blogger> {
     const newBlogger: Blogger = {

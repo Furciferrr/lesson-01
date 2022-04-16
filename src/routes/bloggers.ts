@@ -26,7 +26,9 @@ router.put("/:id", async (req: Request, res: Response) => {
   if(!Object.keys(req.body).length) {
     return res.sendStatus(400)
   }
+ 
   const conversionResult = await validateAndConvert(UpdateBloggerDto, req.body);
+
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   }
@@ -35,6 +37,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     +req.params.id,
     req.body
   );
+
   if (!newBlogger) {
     res.sendStatus(404);
   }

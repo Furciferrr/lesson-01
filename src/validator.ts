@@ -29,13 +29,15 @@ function formatError(errors: ValidationError[]): ErrorType {
   } as any;
 }
 
-export async function validateAndConvert(classToConvert: any, body: string) {
+export async function validateAndConvert(classToConvert: any, body: {}) {
   const result = new ValidationResult();
   result.data = plainToClass(classToConvert, body);
+  
   const errors = await validate(result.data, {
     whitelist: true,
     forbidNonWhitelisted: true,
   });
+  
   if (errors.length > 0) {
     result.error = formatError(errors);
     return result;
