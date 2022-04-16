@@ -45,11 +45,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     req.body
   );
 
-  if (!updatedPost) {
-    return res.sendStatus(404);
-  }
-
-  res.sendStatus(204);
+  res.sendStatus(updatedPost);
 });
 
 router.delete("/:id", async (req: Request, res: Response) => {
