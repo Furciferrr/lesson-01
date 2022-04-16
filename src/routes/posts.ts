@@ -43,7 +43,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   const updatedPost = await postRepository.updatePostById(+req.params.id, req.body);
 
   if (!updatedPost) {
-    res.send(404);
+    return res.sendStatus(404);
   }
 
   res.sendStatus(204);
@@ -52,11 +52,11 @@ router.put("/:id", async (req: Request, res: Response) => {
 router.delete("/:id", async (req: Request, res: Response) => {
   const isRemoved = await postRepository.deletePostById(+req.params.id);
   if (!isRemoved) {
-    res.sendStatus(404);
+    return res.sendStatus(404);
   }
 
   if (isRemoved) {
-    res.send(204);
+    res.sendStatus(204);
   }
 });
 

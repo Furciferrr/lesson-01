@@ -20,7 +20,8 @@ export const postRepository = {
       { id },
       { $set: { ...postDto } }
     );
-    return result.modifiedCount === 1;
+  
+    return false;
   },
   async createPost(postDto: PostDto) {
     const blogger = await bloggersRepository.getBloggerById(postDto.bloggerId);

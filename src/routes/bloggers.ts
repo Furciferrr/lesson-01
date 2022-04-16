@@ -23,7 +23,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 router.put("/:id", async (req: Request, res: Response) => {
-  if(!Object.keys(req.body).length) {
+  if(!req.body || !Object.keys(req.body).length) {
     return res.sendStatus(400)
   }
  
@@ -39,7 +39,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   );
 
   if (!newBlogger) {
-    res.sendStatus(404);
+    return res.sendStatus(404);
   }
 
   res.sendStatus(204);
@@ -48,11 +48,11 @@ router.put("/:id", async (req: Request, res: Response) => {
 router.post("/", async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(BloggerDto, req.body);
   if (conversionResult.error) {
-    res.status(400).send(conversionResult.error);
+    return res.status(400).send(conversionResult.error);
   } else {
     const newBlogger = await bloggersRepository.createBlogger(req.body);
     if (!newBlogger) {
-      res.sendStatus(400);
+      return res.sendStatus(400);
     }
     res.status(201).send(newBlogger);
   }
@@ -61,10 +61,10 @@ router.post("/", async (req: Request, res: Response) => {
 router.delete("/:id", async (req: Request, res: Response) => {
   const result = await bloggersRepository.deleteBloggerById(+req.params.id);
   if (!result) {
-    res.sendStatus(404);
+   return res.sendStatus(404);
   }
   if (result) {
-    res.sendStatus(204);
+    return res.sendStatus(204);
   }
 });
 

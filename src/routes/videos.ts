@@ -13,7 +13,7 @@ router.get("/", async (req: Request, res: Response) => {
 router.get("/:id", async (req: Request, res: Response) => {
   const foundVideo = await videosRepository.getVideoById(+req.params.id);
   if (!foundVideo) {
-    return res.send(404);
+    return res.sendStatus(404);
   }
   res.send(foundVideo);
 });
@@ -25,7 +25,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
   const newVideo = await videosRepository.createVideo(req.body.title);
   if (!newVideo) {
-    res.send(404);
+    return res.sendStatus(404);
   }
   res.status(201).send(newVideo);
 });
@@ -33,7 +33,7 @@ router.post("/", async (req: Request, res: Response) => {
 router.delete("/:id", async (req: Request, res: Response) => {
   const isDeleted = await videosRepository.deleteVideoById(+req.params.id);
   if (!isDeleted) {
-    res.send(404);
+    return res.sendStatus(404);
   }
   res.status(201).send();
 });
@@ -48,7 +48,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     req.body.title
   );
   if (!updatedVideo) {
-    res.send(404);
+    return res.sendStatus(404);
   }
   res.sendStatus(204);
 });
