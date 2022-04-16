@@ -10,7 +10,7 @@ const router = express.Router();
 router.get("/", async (req: Request, res: Response) => {
   const bloggers = await bloggersRepository.getBloggers();
   
-  res.send(bloggers);
+  res.status(200).send(bloggers);
 });
 
 router.get("/:id", async (req: Request, res: Response) => {
