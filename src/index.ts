@@ -11,7 +11,7 @@ const app = express();
 const port = 5000;
 
 
-app.use(authMiddleware)
+//app.use(authMiddleware)
 app.use(cors());
 app.use(bodyParser.json());
 
