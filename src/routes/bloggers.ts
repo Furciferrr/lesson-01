@@ -2,8 +2,6 @@ import { bloggersRepository } from "./../repositories/bloggers-repository";
 import express, { Request, Response } from "express";
 import { BloggerDto, UpdateBloggerDto } from "../dto";
 import { validateAndConvert } from "../validator";
-import { Blogger } from "../types";
-import { WithId } from "mongodb";
 
 const router = express.Router();
 
