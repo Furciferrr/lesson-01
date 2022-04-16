@@ -10,6 +10,7 @@ export interface Post {
   shortDescription: string;
   content: string;
   bloggerId: number;
+  bloggerName: string;
 }
 
 export interface VideoType {

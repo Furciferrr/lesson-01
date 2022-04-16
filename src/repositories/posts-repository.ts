@@ -33,6 +33,7 @@ export const postRepository = {
       shortDescription: postDto.shortDescription,
       content: postDto.content,
       bloggerId: postDto.bloggerId,
+      bloggerName: blogger.name
     };
     await postsCollection.insertOne(newPost, {
       forceServerObjectId: true,

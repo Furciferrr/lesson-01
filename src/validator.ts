@@ -16,7 +16,6 @@ const getKeys = <T extends {}>(obj?: T) => {
 
 function formatError(errors: ValidationError[]): ErrorType {
   return {
-    data: {},
     errorsMessages: errors.map((err) => {
       const errKey = getKeys(err.constraints)?.[0];
       const errorMessage = errKey ? err.constraints?.[errKey] : "";
