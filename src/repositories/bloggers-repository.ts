@@ -3,7 +3,6 @@ import { BloggerDto } from "../dto";
 import { Blogger, Post } from "../types";
 import { getRandomNumber } from "../utils";
 import { bloggersCollection, postsCollection } from "./db-config";
-const { writeJSONToFile } = require("../utils/fs-utils.js");
 
 export const bloggersRepository = {
   removeId<T extends { _id: ObjectId }>(array: T[]): Omit<T, "_id">[] {
