@@ -27,11 +27,11 @@ router.put("/:id", async (req: Request, res: Response) => {
     return res.sendStatus(400)
   }
  
-  /* const conversionResult = await validateAndConvert(UpdateBloggerDto, req.body);
+  const conversionResult = await validateAndConvert(UpdateBloggerDto, req.body);
 
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
-  } */
+  }
 
   const newBlogger = await bloggersRepository.updateBloggerById(
     +req.params.id,
@@ -47,7 +47,7 @@ router.put("/:id", async (req: Request, res: Response) => {
 
 router.post("/", async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(BloggerDto, req.body);
-  if (false) {
+  if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   } else {
     const newBlogger = await bloggersRepository.createBlogger(req.body);
