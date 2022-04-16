@@ -43,6 +43,9 @@ export class UpdatePostDto {
   @IsOptional()
   @IsNotEmpty()
   readonly content: string;
+  @IsOptional()
+  @IsNotEmpty()
+  readonly bloggerId: number;
 }
 
 export class VideoDto {
