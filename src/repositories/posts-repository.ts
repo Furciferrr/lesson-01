@@ -15,13 +15,17 @@ export const postRepository = {
     const result = await postsCollection.deleteOne({ id });
     return result.deletedCount === 1;
   },
-  async updatePostById(id: number, postDto: UpdatePostDto): Promise<boolean> {
+  async updatePostById(id: number, postDto: UpdatePostDto): Promise<400 | 404 | 204> {
+    const blogger = await bloggersRepository.getBloggerById(postDto.bloggerId);
+    if (!blogger) {
+      return 400;
+    }
     const result = await postsCollection.updateOne(
       { id },
-      { $set: { ...postDto } }
+      { $set: { ...postDto, bloggerName: blogger.name } }
     );
   
-    return result.modifiedCount === 1;
+    return result.modifiedCount === 1 ? 204 : 404;
   },
   async createPost(postDto: PostDto) {
     const blogger = await bloggersRepository.getBloggerById(postDto.bloggerId);
