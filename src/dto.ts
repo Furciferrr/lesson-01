@@ -3,7 +3,7 @@ export class BloggerDto {
   @IsNotEmpty({ message: "name field is required" })
   readonly name: string;
   @IsNotEmpty({ message: "youtubeUrl is field required" })
-  @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]+/gm), {
+  @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]?/gm), {
     message: "URL Not Valid",
   })
   readonly youtubeUrl: string;
@@ -16,7 +16,7 @@ export class UpdateBloggerDto {
 
   @IsOptional()
   @IsNotEmpty({ message: "youtubeUrl should be not empty" })
-  @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]+/gm), {
+  @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]?/gm), {
     message: "URL Not Valid",
   })
   readonly youtubeUrl: string;
