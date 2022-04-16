@@ -32,18 +32,22 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 router.put("/:id", async (req: Request, res: Response) => {
-  if(!req.body || !Object.keys(req.body).length) {
-    return res.sendStatus(400)
-  }
   const conversionResult = await validateAndConvert(UpdatePostDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   }
 
-  const updatedPost = await postRepository.updatePostById(+req.params.id, req.body);
+  const updatedPost = await postRepository.updatePostById(
+    +req.params.id,
+    req.body
+  );
 
   if (!updatedPost) {
     return res.sendStatus(404);
+  }
+
+  if (!Object.keys(req.body).length) {
+    return res.sendStatus(400);
   }
 
   res.sendStatus(204);
