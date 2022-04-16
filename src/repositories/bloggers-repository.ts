@@ -2,7 +2,7 @@ import { ObjectId, WithId } from "mongodb";
 import { BloggerDto } from "../dto";
 import { Blogger, Post } from "../types";
 import { getRandomNumber } from "../utils";
-import { bloggersCollection } from "./db-config";
+import { bloggersCollection, postsCollection } from "./db-config";
 
 export const bloggersRepository = {
   removeId<T extends { _id: ObjectId }>(array: T[]): Omit<T, "_id">[] {
@@ -25,7 +25,12 @@ export const bloggersRepository = {
   async deleteBloggerById(id: number): Promise<boolean> {
     try {
       const result = await bloggersCollection.deleteOne({ id });
-      return result.deletedCount === 1;
+      if (result.deletedCount === 1) {
+        await postsCollection.deleteMany({ bloggerId: id });
+        return true
+      } else {
+        return false
+      }
     } catch (e) {
       return false;
     }
