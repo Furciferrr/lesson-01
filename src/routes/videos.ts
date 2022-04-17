@@ -49,7 +49,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     req.body.title
   );
   if (!updatedVideo) {
-    return res.sendStatus(400);
+    return res.sendStatus(404);
   }
   res.sendStatus(204);
 });
