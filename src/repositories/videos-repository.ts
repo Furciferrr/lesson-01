@@ -6,7 +6,7 @@ export const videosRepository = {
   async getVideos(): Promise<VideoType[]> {
     return videosCollection.find({}, { projection: { _id: 0 } }).toArray();
   },
-  async getVideoById(id: number) {
+  async getVideoById(id: number):Promise<VideoType | null> {
     return videosCollection.findOne({ id }, { projection: { _id: 0 } });
   },
   async deleteVideoById(id: number): Promise<boolean> {

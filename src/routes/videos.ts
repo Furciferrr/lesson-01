@@ -2,11 +2,12 @@ import { videosRepository } from "./../repositories/videos-repository";
 import express, { Request, Response } from "express";
 import { VideoDto } from "../dto";
 import { validateAndConvert } from "../validator";
+import { VideoType } from "../types";
 
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
-  const videos = await videosRepository.getVideos();
+  const videos: Array<VideoType> = await videosRepository.getVideos();
   res.send(videos);
 });
 
@@ -35,7 +36,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
   if (!isDeleted) {
     return res.sendStatus(404);
   }
-  res.status(201).send();
+  res.sendStatus(204);
 });
 
 router.put("/:id", async (req: Request, res: Response) => {

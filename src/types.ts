@@ -31,7 +31,6 @@ export interface BloggerBodyType {
 }
 
 export interface ErrorType {
-  data: {};
   errorsMessages: {
     message: string;
     field: string;
