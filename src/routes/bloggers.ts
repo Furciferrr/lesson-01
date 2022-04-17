@@ -2,17 +2,18 @@ import { bloggersRepository } from "./../repositories/bloggers-repository";
 import express, { Request, Response } from "express";
 import { BloggerDto, UpdateBloggerDto } from "../dto";
 import { validateAndConvert } from "../validator";
+import { bloggersService } from "../services/bloggers-service";
 
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
-  const bloggers = await bloggersRepository.getBloggers();
-  
+  const bloggers = await bloggersService.getBloggers();
+
   res.status(200).send(bloggers);
 });
 
 router.get("/:id", async (req: Request, res: Response) => {
-  const foundBlogger = await bloggersRepository.getBloggerById(+req.params.id);
+  const foundBlogger = await bloggersService.getBloggerById(+req.params.id);
 
   if (!foundBlogger) {
     return res.status(404).send();
@@ -21,17 +22,17 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 router.put("/:id", async (req: Request, res: Response) => {
-  if(!req.body || !Object.keys(req.body).length) {
-    return res.sendStatus(400)
+  if (!req.body || !Object.keys(req.body).length) {
+    return res.sendStatus(400);
   }
- 
+
   const conversionResult = await validateAndConvert(UpdateBloggerDto, req.body);
 
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   }
 
-  const newBlogger = await bloggersRepository.updateBloggerById(
+  const newBlogger = await bloggersService.updateBloggerById(
     +req.params.id,
     req.body
   );
@@ -48,7 +49,7 @@ router.post("/", async (req: Request, res: Response) => {
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   } else {
-    const newBlogger = await bloggersRepository.createBlogger(req.body);
+    const newBlogger = await bloggersService.createBlogger(req.body);
     if (!newBlogger) {
       return res.sendStatus(400);
     }
@@ -57,9 +58,9 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 router.delete("/:id", async (req: Request, res: Response) => {
-  const result = await bloggersRepository.deleteBloggerById(+req.params.id);
+  const result = await bloggersService.deleteBloggerById(+req.params.id);
   if (!result) {
-   return res.sendStatus(404);
+    return res.sendStatus(404);
   }
   if (result) {
     return res.sendStatus(204);

@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { PostDto, UpdatePostDto } from "../dto";
-import { postRepository } from "../repositories/posts-repository";
+import { postsService } from "../services/posts-service";
 import { validateAndConvert } from "../validator";
 
 const router = express.Router();
@@ -10,7 +10,7 @@ router.post("/", async (req: Request, res: Response) => {
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   }
-  const newPost = await postRepository.createPost(req.body);
+  const newPost = await postsService.createPost(req.body);
   if (!newPost) {
     return res.status(400).send();
   }
@@ -18,12 +18,12 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 router.get("/", async (req: Request, res: Response) => {
-  const posts = await postRepository.getPosts();
+  const posts = await postsService.getPosts();
   res.send(posts);
 });
 
 router.get("/:id", async (req: Request, res: Response) => {
-  const foundPost = await postRepository.getPostById(+req.params.id);
+  const foundPost = await postsService.getPostById(+req.params.id);
 
   if (!foundPost) {
     return res.status(404).send();
@@ -40,7 +40,7 @@ router.put("/:id", async (req: Request, res: Response) => {
     return res.status(400).send(conversionResult.error);
   }
 
-  const updatedPost = await postRepository.updatePostById(
+  const updatedPost = await postsService.updatePostById(
     +req.params.id,
     req.body
   );
@@ -49,7 +49,7 @@ router.put("/:id", async (req: Request, res: Response) => {
 });
 
 router.delete("/:id", async (req: Request, res: Response) => {
-  const isRemoved = await postRepository.deletePostById(+req.params.id);
+  const isRemoved = await postsService.deletePostById(+req.params.id);
   if (!isRemoved) {
     return res.sendStatus(404);
   }

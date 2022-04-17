@@ -25,17 +25,8 @@ export const bloggersRepository = {
     return bloggers;
   },
   async deleteBloggerById(id: number): Promise<boolean> {
-    try {
-      const result = await bloggersCollection.deleteOne({ id });
-      if (result.deletedCount === 1) {
-        await postsCollection.deleteMany({ bloggerId: id });
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return false;
-    }
+    const result = await bloggersCollection.deleteOne({ id });
+    return result.deletedCount === 1;
   },
   async updateBloggerById(id: number, dto: BloggerDto): Promise<boolean> {
     const result = await bloggersCollection.updateOne(
@@ -45,15 +36,10 @@ export const bloggersRepository = {
 
     return result.matchedCount === 1;
   },
-  async createBlogger(blogger: BloggerDto): Promise<Blogger> {
-    const newBlogger: Blogger = {
-      id: getRandomNumber(),
-      name: blogger.name,
-      youtubeUrl: blogger.youtubeUrl,
-    };
-    await bloggersCollection.insertOne(newBlogger, {
+  async createBlogger(blogger: Blogger): Promise<Blogger> {
+    await bloggersCollection.insertOne(blogger, {
       forceServerObjectId: true,
     });
-    return newBlogger;
+    return blogger;
   },
 };
