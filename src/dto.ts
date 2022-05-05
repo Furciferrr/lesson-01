@@ -5,8 +5,8 @@ export class BloggerDto {
   @MinLength(1)
   @MaxLength(15)
   readonly name: string;
-  @MaxLength(100)
   @IsNotEmpty({ message: "youtubeUrl is field required" })
+  @MaxLength(100)
   @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]/gm), {
     message: "URL Not Valid",
   })
@@ -19,9 +19,9 @@ export class UpdateBloggerDto {
   @MinLength(1)
   @MaxLength(15)
   readonly name: string;
-  @MaxLength(100)
   @IsOptional()
   @IsNotEmpty({ message: "youtubeUrl should be not empty" })
+  @MaxLength(100)
   @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]/gm), {
     message: "URL Not Valid",
   })
@@ -63,8 +63,8 @@ export class PostDtoWithoutBlogger {
 }
 
 export class UpdatePostDto {
-  @IsNotBlank('', {message: 'should be not blank'})
   @IsNotEmpty()
+  @IsNotBlank('', {message: 'should be not blank'})
   @MinLength(1)
   @MaxLength(30)
   readonly title: string;

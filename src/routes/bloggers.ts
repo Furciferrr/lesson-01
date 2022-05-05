@@ -60,7 +60,7 @@ router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
   } else {
     const newBlogger = await bloggersService.createBlogger(req.body);
     if (!newBlogger) {
-      return res.sendStatus(400);
+      return res.status(400).send({ errorsMessages: [{ message: 'bloggerId incorrect', field: "bloggerId" }], resultCode: 1 });
     }
     res.status(201).send(newBlogger);
   }
