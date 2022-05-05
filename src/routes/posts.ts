@@ -50,7 +50,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   res.sendStatus(updatedPost);
 });
 
-router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
+router.delete("/:id", async (req: Request, res: Response) => {
   const isRemoved = await postsService.deletePostById(+req.params.id);
   if (!isRemoved) {
     return res.sendStatus(404);

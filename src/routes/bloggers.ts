@@ -65,7 +65,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
+router.delete("/:id", async (req: Request, res: Response) => {
   const result = await bloggersService.deleteBloggerById(+req.params.id);
   if (!result) {
     return res.sendStatus(404);
