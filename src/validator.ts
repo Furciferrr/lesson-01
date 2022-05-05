@@ -44,7 +44,14 @@ export async function validateAndConvert(classToConvert: any, body: {}) {
       //forbidNonWhitelisted: true,
     });
     if (err.length > 0) {
-      result.error = formatError(err);
+      const err = await validate(result.data, {
+        whitelist: true,
+        //forbidNonWhitelisted: true,
+      });
+      
+      if (err.length > 0) {
+        result.error = formatError(err);
+      }
     }
     return result;
   }

@@ -59,12 +59,10 @@ export class PostDtoWithoutBlogger {
 }
 
 export class UpdatePostDto {
-  @IsOptional()
   @IsNotEmpty()
   @MinLength(1)
   @MaxLength(30)
   readonly title: string;
-  @IsOptional()
   @IsNotEmpty()
   @MinLength(1)
   @MaxLength(100)
