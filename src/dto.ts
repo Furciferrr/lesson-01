@@ -1,8 +1,9 @@
-import { IsNotEmpty, Matches, IsOptional } from "class-validator";
+import { IsNotEmpty, Matches, IsOptional, Max } from "class-validator";
 export class BloggerDto {
   @IsNotEmpty({ message: "name field is required" })
   readonly name: string;
   @IsNotEmpty({ message: "youtubeUrl is field required" })
+  @Max(20)
   @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]/gm), {
     message: "URL Not Valid",
   })
@@ -10,12 +11,11 @@ export class BloggerDto {
 }
 
 export class UpdateBloggerDto {
-  @IsOptional()
   @IsNotEmpty({ message: "should be not empty" })
   readonly name: string;
-
   @IsOptional()
   @IsNotEmpty({ message: "youtubeUrl should be not empty" })
+  @Max(20)
   @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]/gm), {
     message: "URL Not Valid",
   })
@@ -24,6 +24,7 @@ export class UpdateBloggerDto {
 
 export class PostDto {
   @IsNotEmpty({ message: "title field is required" })
+  @Max(20)
   readonly title: string;
   @IsNotEmpty({ message: "shortDescription field is required" })
   readonly shortDescription: string;
@@ -35,6 +36,7 @@ export class PostDto {
 
 export class PostDtoWithoutBlogger {
   @IsNotEmpty({ message: "title field is required" })
+  @Max(20)
   readonly title: string;
   @IsNotEmpty({ message: "shortDescription field is required" })
   readonly shortDescription: string;
@@ -45,6 +47,7 @@ export class PostDtoWithoutBlogger {
 export class UpdatePostDto {
   @IsOptional()
   @IsNotEmpty()
+  @Max(20)
   readonly title: string;
   @IsOptional()
   @IsNotEmpty()
