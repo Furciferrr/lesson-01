@@ -14,6 +14,7 @@ export class BloggerDto {
 }
 
 export class UpdateBloggerDto {
+  @IsNotBlank('', {message: 'should be not blank'})
   @IsNotEmpty({ message: "should be not empty" })
   @MinLength(1)
   @MaxLength(15)
@@ -28,7 +29,7 @@ export class UpdateBloggerDto {
 }
 
 export class PostDto {
-  @IsNotBlank()
+  @IsNotBlank('', {message: 'should be not blank'})
   @IsNotEmpty({ message: "title field is required" })
   @MinLength(1)
   @MaxLength(30)
@@ -37,7 +38,7 @@ export class PostDto {
   @MinLength(1)
   @MaxLength(100)
   readonly shortDescription: string;
-  @IsNotBlank()
+  @IsNotBlank('', {message: 'should be not blank'})
   @IsNotEmpty({ message: "content field is required" })
   @MinLength(1)
   @MaxLength(1000)
@@ -62,7 +63,7 @@ export class PostDtoWithoutBlogger {
 }
 
 export class UpdatePostDto {
-  @IsNotBlank()
+  @IsNotBlank('', {message: 'should be not blank'})
   @IsNotEmpty()
   @MinLength(1)
   @MaxLength(30)
@@ -71,12 +72,13 @@ export class UpdatePostDto {
   @MinLength(1)
   @MaxLength(100)
   readonly shortDescription: string;
-  @IsNotBlank()
+  @IsNotBlank('', {message: 'should be not blank'})
   @IsOptional()
   @IsNotEmpty()
   @MinLength(1)
   @MaxLength(1000)
   readonly content: string;
+  @IsNotBlank('', {message: 'should be not blank'})
   @IsOptional()
   @IsNotEmpty()
   readonly bloggerId: number;

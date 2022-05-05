@@ -35,18 +35,18 @@ export async function validateAndConvert(classToConvert: any, body: {}) {
 
   const errors = await validate(result.data, {
     whitelist: true,
-    //forbidNonWhitelisted: true,
+    forbidNonWhitelisted: true,
   });
 
   if (errors.length > 0) {
     const err = await validate(result.data, {
       whitelist: true,
-      //forbidNonWhitelisted: true,
+      forbidNonWhitelisted: true,
     });
     if (err.length > 0) {
       const err = await validate(result.data, {
         whitelist: true,
-        //forbidNonWhitelisted: true,
+        forbidNonWhitelisted: true,
       });
       
       if (err.length > 0) {
