@@ -1,10 +1,11 @@
-import { IsNotEmpty, Matches, IsOptional, MaxLength } from "class-validator";
+import { IsNotEmpty, Matches, IsOptional, MaxLength, MinLength } from "class-validator";
 export class BloggerDto {
   @IsNotEmpty({ message: "name field is required" })
+  @MinLength(1)
   @MaxLength(15)
   readonly name: string;
-  @IsNotEmpty({ message: "youtubeUrl is field required" })
   @MaxLength(100)
+  @IsNotEmpty({ message: "youtubeUrl is field required" })
   @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]/gm), {
     message: "URL Not Valid",
   })
@@ -13,11 +14,12 @@ export class BloggerDto {
 
 export class UpdateBloggerDto {
   @IsNotEmpty({ message: "should be not empty" })
+  @MinLength(1)
   @MaxLength(15)
   readonly name: string;
+  @MaxLength(100)
   @IsOptional()
   @IsNotEmpty({ message: "youtubeUrl should be not empty" })
-  @MaxLength(100)
   @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]/gm), {
     message: "URL Not Valid",
   })
@@ -26,12 +28,15 @@ export class UpdateBloggerDto {
 
 export class PostDto {
   @IsNotEmpty({ message: "title field is required" })
+  @MinLength(1)
   @MaxLength(30)
   readonly title: string;
   @IsNotEmpty({ message: "shortDescription field is required" })
+  @MinLength(1)
   @MaxLength(100)
   readonly shortDescription: string;
   @IsNotEmpty({ message: "content field is required" })
+  @MinLength(1)
   @MaxLength(1000)
   readonly content: string;
   @IsNotEmpty({ message: "bloggerId field is required" })
@@ -40,12 +45,15 @@ export class PostDto {
 
 export class PostDtoWithoutBlogger {
   @IsNotEmpty({ message: "title field is required" })
+  @MinLength(1)
   @MaxLength(30)
   readonly title: string;
   @IsNotEmpty({ message: "shortDescription field is required" })
+  @MinLength(1)
   @MaxLength(100)
   readonly shortDescription: string;
   @IsNotEmpty({ message: "content field is required" })
+  @MinLength(1)
   @MaxLength(1000)
   readonly content: string;
 }
@@ -53,14 +61,17 @@ export class PostDtoWithoutBlogger {
 export class UpdatePostDto {
   @IsOptional()
   @IsNotEmpty()
+  @MinLength(1)
   @MaxLength(30)
   readonly title: string;
   @IsOptional()
   @IsNotEmpty()
+  @MinLength(1)
   @MaxLength(100)
   readonly shortDescription: string;
   @IsOptional()
   @IsNotEmpty()
+  @MinLength(1)
   @MaxLength(1000)
   readonly content: string;
   @IsOptional()
