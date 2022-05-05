@@ -78,7 +78,6 @@ export class UpdatePostDto {
   @MinLength(1)
   @MaxLength(1000)
   readonly content: string;
-  @IsNotBlank('', {message: 'should be not blank'})
   @IsOptional()
   @IsNotEmpty()
   readonly bloggerId: number;
