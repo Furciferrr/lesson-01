@@ -37,6 +37,7 @@ export class PostDto {
   @MinLength(1)
   @MaxLength(100)
   readonly shortDescription: string;
+  @IsNotBlank()
   @IsNotEmpty({ message: "content field is required" })
   @MinLength(1)
   @MaxLength(1000)
@@ -70,6 +71,7 @@ export class UpdatePostDto {
   @MinLength(1)
   @MaxLength(100)
   readonly shortDescription: string;
+  @IsNotBlank()
   @IsOptional()
   @IsNotEmpty()
   @MinLength(1)
