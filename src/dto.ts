@@ -14,8 +14,8 @@ export class BloggerDto {
 }
 
 export class UpdateBloggerDto {
-  @IsNotBlank('', {message: 'should be not blank'})
   @IsNotEmpty({ message: "should be not empty" })
+  @IsNotBlank('', {message: 'should be not blank'})
   @MinLength(1)
   @MaxLength(15)
   readonly name: string;

@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import { CommentDto, PostDto, UpdatePostDto } from "../dto";
 import { authMiddleware } from "../middlewares/auth-middleware";
 import { authBaseMiddleware } from "../middlewares/basic-middleware";
+import { bloggersService } from "../services/bloggers-service";
 import { commentService } from "../services/comments-service";
 import { postsService } from "../services/posts-service";
 import { validateAndConvert } from "../validator";
@@ -12,6 +13,10 @@ router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(PostDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
+  }
+  const blogger = await bloggersService.getBloggerById(+req.body.bloggerId)
+  if (!blogger) {
+    return res.status(400).send({ errorsMessages: [{ message: 'bloggerId incorrect', field: "bloggerId" }], resultCode: 1 });
   }
   const newPost = await postsService.createPost(req.body);
   if (!newPost) {
@@ -41,6 +46,11 @@ router.put("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(UpdatePostDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
+  }
+
+  const blogger = await bloggersService.getBloggerById(+req.body.bloggerId)
+  if (!blogger) {
+    return res.status(400).send({ errorsMessages: [{ message: 'bloggerId incorrect', field: "bloggerId" }], resultCode: 1 });
   }
 
   const updatedPost = await postsService.updatePostById(
