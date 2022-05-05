@@ -29,7 +29,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   res.send(foundBlogger);
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
   if (!req.body || !Object.keys(req.body).length) {
     return res.sendStatus(400);
   }
@@ -52,7 +52,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   res.sendStatus(204);
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", authMiddleware, async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(BloggerDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
@@ -65,7 +65,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
   const result = await bloggersService.deleteBloggerById(+req.params.id);
   if (!result) {
     return res.sendStatus(404);
