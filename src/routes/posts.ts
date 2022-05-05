@@ -1,11 +1,13 @@
 import express, { Request, Response } from "express";
-import { PostDto, UpdatePostDto } from "../dto";
+import { CommentDto, PostDto, UpdatePostDto } from "../dto";
+import { authMiddleware } from "../middlewares/auth-middleware";
+import { commentService } from "../services/comments-service";
 import { postsService } from "../services/posts-service";
 import { validateAndConvert } from "../validator";
 
 const router = express.Router();
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", authMiddleware, async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(PostDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
@@ -31,7 +33,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   res.send(foundPost);
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
   if (!Object.keys(req.body).length) {
     return res.sendStatus(400);
   }
@@ -48,7 +50,7 @@ router.put("/:id", async (req: Request, res: Response) => {
   res.sendStatus(updatedPost);
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
   const isRemoved = await postsService.deletePostById(+req.params.id);
   if (!isRemoved) {
     return res.sendStatus(404);
@@ -57,6 +59,44 @@ router.delete("/:id", async (req: Request, res: Response) => {
   if (isRemoved) {
     res.sendStatus(204);
   }
+});
+
+router.post("/:id/comments", authMiddleware, async (req: Request, res: Response) => {
+  const conversionResult = await validateAndConvert(CommentDto, req.body);
+  if (conversionResult.error) {
+    return res.status(400).send(conversionResult.error);
+  }
+  const foundPost = await postsService.getPostById(+req.params.id);
+  if (!foundPost) {
+    return res.status(404).send();
+  }
+  const newComment = await commentService.createComment(
+    +req.params.id,
+    req.body,
+    //@ts-ignore
+    req.user
+  );
+  if (!newComment) {
+    return res.status(400).send();
+  }
+  const { postId, ...commentResponse } = newComment;
+  res.status(201).send(commentResponse);
+});
+
+router.get("/:id/comments", authMiddleware, async (req: Request, res: Response) => {
+  const pageNumber = req.query.pageNumber as string;
+  const pageSize = req.query.pageSize as string;
+  const foundPost = await postsService.getPostById(+req.params.id);
+  if (!foundPost) {
+    return res.status(404).send();
+  }
+  const comments = await commentService.getCommentsByPostId(
+    +req.params.id,
+    +pageNumber,
+    +pageSize
+  );
+
+  return res.send(comments);
 });
 
 export default router;

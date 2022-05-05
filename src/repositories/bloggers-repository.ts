@@ -1,28 +1,29 @@
-import { ObjectId, WithId } from "mongodb";
 import { BloggerDto } from "../dto";
-import { Blogger, Post } from "../types";
-import { getRandomNumber } from "../utils";
-import { bloggersCollection, postsCollection } from "./db-config";
+import { Blogger } from "../types";
+import { bloggersCollection } from "./db-config";
 
 export const bloggersRepository = {
-  removeId<T extends { _id: ObjectId }>(array: T[]): Omit<T, "_id">[] {
-    return array.map((item) => {
-      const { _id, ...other } = item;
-      return other;
-    });
-  },
-  async getBloggers(): Promise<Array<Blogger>> {
+  async getBloggers(
+    pageNumber: number,
+    pageSize: number
+  ): Promise<Array<Blogger>> {
     const bloggers: Array<Blogger> = await bloggersCollection
       .find({}, { projection: { _id: 0 } })
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
       .toArray();
     return bloggers;
   },
+  async getTotalCount(): Promise<number> {
+    return await bloggersCollection.countDocuments();
+  },
+
   async getBloggerById(id: number): Promise<Blogger | null> {
-    const bloggers: Blogger | null = await bloggersCollection.findOne(
+    const blogger: Blogger | null = await bloggersCollection.findOne(
       { id },
       { projection: { _id: 0 } }
     );
-    return bloggers;
+    return blogger;
   },
   async deleteBloggerById(id: number): Promise<boolean> {
     const result = await bloggersCollection.deleteOne({ id });

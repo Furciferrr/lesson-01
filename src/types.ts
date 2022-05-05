@@ -1,3 +1,5 @@
+import { WithId } from "mongodb";
+
 export interface Blogger {
   id: number;
   name: string;
@@ -37,3 +39,40 @@ export interface ErrorType {
   }[];
   resultCode: 0 | 1 | 2;
 }
+
+export interface PaginationType {
+  pageNumber?: number;
+  pageSize?: number;
+}
+
+export interface UserViewType extends Omit<UserDBType, "hashPassword"> {}
+
+export interface UserDBType {
+  id: number;
+  login: string;
+  hashPassword: string;
+}
+
+export interface ResponseType<T> {
+  pagesCount: number;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: Array<T>;
+}
+
+export interface CommentDBType {
+  id: number;
+  content: string;
+  userId: string;
+  userLogin: string;
+  addedAt: string;
+  postId: number;
+}
+
+export type DBType<T> = {
+  items: T[];
+  pagination: [{ totalCount: number }];
+};
+
+export type CommentResponse = Omit<CommentDBType, "postId">;

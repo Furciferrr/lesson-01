@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { BloggerDto } from "../dto";
-import { Blogger } from "../types";
+import { Blogger, ResponseType } from "../types";
 import { getRandomNumber } from "../utils";
 import { bloggersRepository } from "../repositories/bloggers-repository";
 import { postRepository } from "../repositories/posts-repository";
@@ -12,9 +12,24 @@ export const bloggersService = {
       return other;
     });
   },
-  async getBloggers(): Promise<Array<Blogger>> {
-    const bloggers: Array<Blogger> = await bloggersRepository.getBloggers();
-    return bloggers;
+  async getBloggers(
+    pageNumber = 1,
+    pageSize = 10
+  ): Promise<ResponseType<Blogger>> {
+    const bloggers: Array<Blogger> = await bloggersRepository.getBloggers(
+      pageNumber,
+      pageSize
+    );
+    const totalCount = await bloggersRepository.getTotalCount();
+    const pagesCount = Math.ceil(totalCount / pageSize);
+    const buildResponse = {
+      pagesCount,
+      page: pageNumber,
+      pageSize,
+      totalCount,
+      items: bloggers,
+    };
+    return buildResponse;
   },
   async getBloggerById(id: number): Promise<Blogger | null> {
     const bloggers: Blogger | null = await bloggersRepository.getBloggerById(

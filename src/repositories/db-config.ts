@@ -1,3 +1,4 @@
+import { UserDBType, CommentDBType } from './../types';
 import { MongoClient } from "mongodb";
 import { Blogger, Post, VideoType } from "../types";
 
@@ -14,6 +15,8 @@ export const bloggersCollection = client
 
 export const postsCollection = client.db("bloggers").collection<Post>("posts");
 export const videosCollection = client.db("bloggers").collection<VideoType>("videos");
+export const usersCollection = client.db("bloggers").collection<UserDBType>("users");
+export const commentsCollection = client.db("bloggers").collection<CommentDBType>("comments");
 
 export async function runDb() {
   try {

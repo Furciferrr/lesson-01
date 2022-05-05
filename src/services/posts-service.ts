@@ -1,13 +1,44 @@
 import { postRepository } from "./../repositories/posts-repository";
 import { PostDto, UpdatePostDto } from "../dto";
-import { Post } from "../types";
+import { DBType, Post, ResponseType } from "../types";
 import { getRandomNumber } from "../utils";
 import { bloggersService } from "./bloggers-service";
 
 export const postsService = {
-  async getPosts(): Promise<Post[]> {
-    return postRepository.getPosts();
+  async getPosts(pageNumber = 1, pageSize = 10): Promise<ResponseType<Post>> {
+    const posts = await postRepository.getPosts(pageNumber, pageSize);
+    const totalCount = await postRepository.getTotalCount();
+    const pagesCount = Math.ceil(totalCount / pageSize);
+    const buildResponse = {
+      pagesCount,
+      page: pageNumber,
+      pageSize,
+      totalCount,
+      items: posts,
+    };
+    return buildResponse;
   },
+
+  async getPostsByBloggerId(
+    bloggerId: number,
+    pageNumber = 1,
+    pageSize = 10
+  ): Promise<ResponseType<Post>> {
+    const resultPosts = await postRepository.getPostByBloggerId(
+      bloggerId,
+      pageNumber,
+      pageSize
+    );
+    const { pagination, ...result } = resultPosts;
+    return {
+      totalCount: pagination[0].totalCount,
+      pageSize,
+      page: pageNumber,
+      pagesCount: Math.ceil(pagination[0].totalCount / pageSize),
+      ...result,
+    };
+  },
+
   async getPostById(id: number): Promise<Post | null> {
     return postRepository.getPostById(id);
   },
@@ -24,7 +55,7 @@ export const postsService = {
     }
     const result = await postRepository.updatePostById(id, postDto);
 
-    return result;
+    return result ? 204 : 404;
   },
   async createPost(postDto: PostDto) {
     const blogger = await bloggersService.getBloggerById(postDto.bloggerId);
@@ -39,7 +70,7 @@ export const postsService = {
       bloggerId: postDto.bloggerId,
       bloggerName: blogger.name,
     };
-    await postRepository.createPost(newPost)
+    await postRepository.createPost(newPost);
     return newPost;
   },
 };

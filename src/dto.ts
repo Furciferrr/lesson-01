@@ -33,6 +33,15 @@ export class PostDto {
   readonly bloggerId: number;
 }
 
+export class PostDtoWithoutBlogger {
+  @IsNotEmpty({ message: "title field is required" })
+  readonly title: string;
+  @IsNotEmpty({ message: "shortDescription field is required" })
+  readonly shortDescription: string;
+  @IsNotEmpty({ message: "content field is required" })
+  readonly content: string;
+}
+
 export class UpdatePostDto {
   @IsOptional()
   @IsNotEmpty()
@@ -51,4 +60,16 @@ export class UpdatePostDto {
 export class VideoDto {
   @IsNotEmpty({ message: "title field is required" })
   readonly title: string;
+}
+
+export class UserDto {
+  @IsNotEmpty({ message: "username field is required" })
+  readonly username: string;
+  @IsNotEmpty({ message: "password field is required" })
+  readonly password: string;
+}
+
+export class CommentDto {
+  @IsNotEmpty({ message: "content field is required" })
+  readonly content: string;
 }
