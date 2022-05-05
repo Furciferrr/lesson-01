@@ -8,15 +8,15 @@ export const postsService = {
   async getPosts(pageNumber = 1, pageSize = 10): Promise<ResponseType<Post>> {
     const posts = await postRepository.getPosts(pageNumber, pageSize);
     const totalCount = await postRepository.getTotalCount();
-    const pagesCount = Math.ceil(totalCount / pageSize);
+    const pagesCount = Math.ceil(totalCount / pageSize || 10);
     const buildResponse = {
       pagesCount,
-      page: pageNumber,
-      pageSize,
+      page: pageNumber || 1,
+      pageSize: pageSize || 10,
       totalCount,
       items: posts,
     };
-    return buildResponse;
+    return posts as any;
   },
 
   async getPostsByBloggerId(
@@ -30,7 +30,6 @@ export const postsService = {
       pageSize
     );
     const { pagination, ...result } = resultPosts;
-    return result as any
     return {
       totalCount: pagination[0].totalCount,
       pageSize,
