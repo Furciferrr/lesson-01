@@ -30,6 +30,7 @@ export const postsService = {
       pageSize
     );
     const { pagination, ...result } = resultPosts;
+    return result as any
     return {
       totalCount: pagination[0].totalCount,
       pageSize,

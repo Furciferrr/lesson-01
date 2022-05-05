@@ -9,6 +9,9 @@ export const authBaseMiddleware = async (
   if (!token) {
     return res.sendStatus(401);
   }
+  if(req.headers.authorization?.split(" ")[0] !== "Basic") {
+	return res.sendStatus(401);
+  }
   try {
     const decode = Buffer.from(token, "base64").toString("ascii");
     const creds = decode.split(":");
