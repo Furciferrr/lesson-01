@@ -1,4 +1,5 @@
 import { IsNotEmpty, Matches, IsOptional, MaxLength, MinLength } from "class-validator";
+import { IsNotBlank } from "./utils";
 export class BloggerDto {
   @IsNotEmpty({ message: "name field is required" })
   @MinLength(1)
@@ -27,6 +28,7 @@ export class UpdateBloggerDto {
 }
 
 export class PostDto {
+  @IsNotBlank()
   @IsNotEmpty({ message: "title field is required" })
   @MinLength(1)
   @MaxLength(30)
@@ -59,6 +61,7 @@ export class PostDtoWithoutBlogger {
 }
 
 export class UpdatePostDto {
+  @IsNotBlank()
   @IsNotEmpty()
   @MinLength(1)
   @MaxLength(30)
