@@ -23,7 +23,11 @@ export const postsService = {
     bloggerId: number,
     pageNumber = 1,
     pageSize = 10
-  ): Promise<ResponseType<Post>> {
+  ): Promise<ResponseType<Post> | false> {
+    const blogger = await bloggersService.getBloggerById(bloggerId)
+    if(!blogger) {
+      return false
+    }
     const resultPosts = await postRepository.getPostByBloggerId(
       bloggerId,
       pageNumber || 1,
