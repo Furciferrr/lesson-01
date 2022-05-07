@@ -2,6 +2,7 @@ import { IsNotEmpty, Matches, IsOptional, MaxLength, MinLength } from "class-val
 import { IsNotBlank } from "./utils";
 export class BloggerDto {
   @IsNotEmpty({ message: "name field is required" })
+  @IsNotBlank('', {message: 'should be not blank'})
   @MinLength(1)
   @MaxLength(15)
   readonly name: string;
@@ -22,15 +23,15 @@ export class UpdateBloggerDto {
   @IsOptional()
   @IsNotEmpty({ message: "youtubeUrl should be not empty" })
   @MaxLength(100)
-  @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]/gm), {
+  @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]/m), {
     message: "URL Not Valid",
   })
   readonly youtubeUrl: string;
 }
 
 export class PostDto {
-  @IsNotBlank('', {message: 'should be not blank'})
   @IsNotEmpty({ message: "title field is required" })
+  @IsNotBlank('', {message: 'should be not blank'})
   @MinLength(1)
   @MaxLength(30)
   readonly title: string;
@@ -49,6 +50,7 @@ export class PostDto {
 
 export class PostDtoWithoutBlogger {
   @IsNotEmpty({ message: "title field is required" })
+  @IsNotBlank('', {message: 'should be not blank'})
   @MinLength(1)
   @MaxLength(30)
   readonly title: string;
