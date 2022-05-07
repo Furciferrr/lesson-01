@@ -8,7 +8,7 @@ export const postsService = {
   async getPosts(pageNumber = 1, pageSize = 10): Promise<ResponseType<Post>> {
     const posts = await postRepository.getPosts(pageNumber, pageSize);
     const totalCount = await postRepository.getTotalCount();
-    const pagesCount = Math.ceil(totalCount / pageSize || 10);
+    const pagesCount = Math.ceil(totalCount / (pageSize || 10));
     const buildResponse = {
       pagesCount,
       page: pageNumber || 1,

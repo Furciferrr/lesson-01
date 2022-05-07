@@ -78,7 +78,7 @@ router.delete("/:id", authBaseMiddleware, async (req: Request, res: Response) =>
 
 router.post(
   "/:bloggerId/posts",
-  authMiddleware,
+  authBaseMiddleware,
   async (req: Request, res: Response) => {
     const conversionResult = await validateAndConvert(
       PostDtoWithoutBlogger,

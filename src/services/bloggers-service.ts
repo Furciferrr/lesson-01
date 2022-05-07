@@ -21,7 +21,7 @@ export const bloggersService = {
       pageSize
     );
     const totalCount = await bloggersRepository.getTotalCount();
-    const pagesCount = Math.ceil(totalCount / pageSize || 10);
+    const pagesCount = Math.ceil(totalCount / (pageSize || 10));
     const buildResponse = {
       pagesCount,
       page: pageNumber || 1,

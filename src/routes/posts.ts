@@ -72,7 +72,7 @@ router.delete("/:id", authBaseMiddleware, async (req: Request, res: Response) =>
   }
 });
 
-router.post("/:id/comments", authMiddleware, async (req: Request, res: Response) => {
+router.post("/:id/comments", authBaseMiddleware, async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(CommentDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
@@ -94,7 +94,7 @@ router.post("/:id/comments", authMiddleware, async (req: Request, res: Response)
   res.status(201).send(commentResponse);
 });
 
-router.get("/:id/comments", authMiddleware, async (req: Request, res: Response) => {
+router.get("/:id/comments", authBaseMiddleware, async (req: Request, res: Response) => {
   const pageNumber = req.query.pageNumber as string;
   const pageSize = req.query.pageSize as string;
   const foundPost = await postsService.getPostById(+req.params.id);
