@@ -92,6 +92,7 @@ router.post(
         bloggerId: +req.params.bloggerId,
       });
       if (!newPost) {
+        
         return res.sendStatus(404);
       }
       res.status(201).send(newPost);
