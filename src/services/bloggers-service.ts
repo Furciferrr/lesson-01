@@ -29,7 +29,7 @@ export const bloggersService = {
       totalCount,
       items: bloggers,
     };
-    return bloggers as any;
+    return buildResponse;
   },
   async getBloggerById(id: number): Promise<Blogger | null> {
     const bloggers: Blogger | null = await bloggersRepository.getBloggerById(

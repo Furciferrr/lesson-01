@@ -16,7 +16,7 @@ export const postsService = {
       totalCount,
       items: posts,
     };
-    return posts as any;
+    return buildResponse;
   },
 
   async getPostsByBloggerId(
