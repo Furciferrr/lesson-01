@@ -17,8 +17,8 @@ export const bloggersService = {
     pageSize = 10
   ): Promise<ResponseType<Blogger>> {
     const bloggers: Array<Blogger> = await bloggersRepository.getBloggers(
-      pageNumber,
-      pageSize
+      pageNumber || 1,
+      pageSize || 10
     );
     const totalCount = await bloggersRepository.getTotalCount();
     const pagesCount = Math.ceil(totalCount / (pageSize || 10));

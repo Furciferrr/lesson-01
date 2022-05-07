@@ -1,10 +1,6 @@
 import { postsService } from "./../services/posts-service";
 import express, { Request, Response } from "express";
-import {
-  BloggerDto,
-  PostDtoWithoutBlogger,
-  UpdateBloggerDto,
-} from "../dto";
+import { BloggerDto, PostDtoWithoutBlogger, UpdateBloggerDto } from "../dto";
 import { validateAndConvert } from "../validator";
 import { bloggersService } from "../services/bloggers-service";
 import { authMiddleware } from "../middlewares/auth-middleware";
@@ -13,8 +9,8 @@ import { authBaseMiddleware } from "../middlewares/basic-middleware";
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
-  const pageNumber = req.query.pageNumber as string;
-  const pageSize = req.query.pageSize as string;
+  const pageNumber = req.query.PageNumber as string;
+  const pageSize = req.query.PageSize as string;
 
   const bloggers = await bloggersService.getBloggers(+pageNumber, +pageSize);
 
@@ -60,26 +56,38 @@ router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
   } else {
     const newBlogger = await bloggersService.createBlogger(req.body);
     if (!newBlogger) {
-      return res.status(400).send({ errorsMessages: [{ message: 'bloggerId incorrect', field: "bloggerId" }], resultCode: 1 });
+      return res
+        .status(400)
+        .send({
+          errorsMessages: [
+            { message: "bloggerId incorrect", field: "bloggerId" },
+          ],
+          resultCode: 1,
+        });
     }
     res.status(201).send(newBlogger);
   }
 });
 
-router.delete("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
-  const result = await bloggersService.deleteBloggerById(+req.params.id);
-  if (!result) {
-    return res.sendStatus(404);
+router.delete(
+  "/:id",
+  authBaseMiddleware,
+  async (req: Request, res: Response) => {
+    const result = await bloggersService.deleteBloggerById(+req.params.id);
+    if (!result) {
+      return res.sendStatus(404);
+    }
+    if (result) {
+      return res.sendStatus(204);
+    }
   }
-  if (result) {
-    return res.sendStatus(204);
-  }
-});
+);
 
 router.post(
   "/:bloggerId/posts",
   authBaseMiddleware,
   async (req: Request, res: Response) => {
+
     const conversionResult = await validateAndConvert(
       PostDtoWithoutBlogger,
       req.body
@@ -92,7 +100,6 @@ router.post(
         bloggerId: +req.params.bloggerId,
       });
       if (!newPost) {
-
         return res.sendStatus(404);
       }
       res.status(201).send(newPost);
@@ -101,8 +108,8 @@ router.post(
 );
 
 router.get("/:bloggerId/posts", async (req: Request, res: Response) => {
-  const pageNumber = req.query.pageNumber as string;
-  const pageSize = req.query.pageSize as string;
+  const pageNumber = req.query.PageNumber as string;
+  const pageSize = req.query.PageSize as string;
   const posts = await postsService.getPostsByBloggerId(
     +req.params.bloggerId,
     +pageNumber,

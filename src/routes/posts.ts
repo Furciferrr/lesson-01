@@ -95,8 +95,8 @@ router.post("/:id/comments", authBaseMiddleware, async (req: Request, res: Respo
 });
 
 router.get("/:id/comments", authBaseMiddleware, async (req: Request, res: Response) => {
-  const pageNumber = req.query.pageNumber as string;
-  const pageSize = req.query.pageSize as string;
+  const pageNumber = req.query.PageNumber as string;
+  const pageSize = req.query.PageSize as string;
   const foundPost = await postsService.getPostById(+req.params.id);
   if (!foundPost) {
     return res.status(404).send();
