@@ -7,7 +7,7 @@ export class BloggerDto {
   readonly name: string;
   @IsNotEmpty({ message: "youtubeUrl is field required" })
   @MaxLength(100)
-  @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]/gm), {
+  @Matches(RegExp(/^https:\/\/[a-zA-Z0-9_-]+.[a-z]+[\/a-zA-Z0-9_-]/m), {
     message: "URL Not Valid",
   })
   readonly youtubeUrl: string;

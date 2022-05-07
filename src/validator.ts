@@ -4,7 +4,7 @@ import { ErrorType } from "./types";
 
 class ValidationResult {
   data: any;
-  error: any;
+  error: ErrorType;
 }
 
 const getKeys = <T extends {}>(obj?: T) => {
@@ -15,6 +15,7 @@ const getKeys = <T extends {}>(obj?: T) => {
 };
 
 function formatError(errors: ValidationError[]): ErrorType {
+  //console.log("ERROR EVENT:", errors);
   return {
     errorsMessages: errors.map((err) => {
       const errKey = getKeys(err.constraints)?.[0];
@@ -33,27 +34,15 @@ export async function validateAndConvert(classToConvert: any, body: {}) {
 
   result.data = plainToClass(classToConvert, body);
 
+  
+
   const errors = await validate(result.data, {
     whitelist: true,
     //forbidNonWhitelisted: true,
   });
 
   if (errors.length > 0) {
-    const err = await validate(result.data, {
-      whitelist: true,
-      //forbidNonWhitelisted: true,
-    });
-    if (err.length > 0) {
-      const err = await validate(result.data, {
-        whitelist: true,
-        //forbidNonWhitelisted: true,
-      });
-      
-      if (err.length > 0) {
-        result.error = formatError(err);
-      }
-    }
-    return result;
+    result.error = formatError(errors);
   }
   return result;
 }
