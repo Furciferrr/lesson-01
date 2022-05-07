@@ -26,15 +26,15 @@ export const postsService = {
   ): Promise<ResponseType<Post>> {
     const resultPosts = await postRepository.getPostByBloggerId(
       bloggerId,
-      pageNumber,
-      pageSize
+      pageNumber || 1,
+      pageSize || 10
     );
     const { pagination, ...result } = resultPosts;
     return {
       totalCount: pagination[0].totalCount,
-      pageSize,
-      page: pageNumber,
-      pagesCount: Math.ceil(pagination[0].totalCount / pageSize),
+      pageSize: pageSize || 10,
+      page: pageNumber | 1,
+      pagesCount: Math.ceil(pagination[0].totalCount / (pageSize || 10)),
       ...result,
     };
   },
