@@ -11,8 +11,9 @@ const router = express.Router();
 router.get("/", async (req: Request, res: Response) => {
   const pageNumber = req.query.PageNumber as string;
   const pageSize = req.query.PageSize as string;
+  const searchTerm = req.query.SearchNameTerm as string
 
-  const bloggers = await bloggersService.getBloggers(+pageNumber, +pageSize);
+  const bloggers = await bloggersService.getBloggers(+pageNumber, +pageSize, searchTerm);
 
   res.status(200).send(bloggers);
 });

@@ -55,10 +55,12 @@ export class PostDtoWithoutBlogger {
   @MaxLength(30)
   readonly title: string;
   @IsNotEmpty({ message: "shortDescription field is required" })
+  @IsNotBlank('', {message: 'should be not blank'})
   @MinLength(1)
   @MaxLength(100)
   readonly shortDescription: string;
   @IsNotEmpty({ message: "content field is required" })
+  @IsNotBlank('', {message: 'should be not blank'})
   @MinLength(1)
   @MaxLength(1000)
   readonly content: string;

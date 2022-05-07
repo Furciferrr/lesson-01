@@ -14,11 +14,13 @@ export const bloggersService = {
   },
   async getBloggers(
     pageNumber = 1,
-    pageSize = 10
+    pageSize = 10,
+    searchTerm?: string
   ): Promise<ResponseType<Blogger>> {
     const bloggers: Array<Blogger> = await bloggersRepository.getBloggers(
       pageNumber || 1,
-      pageSize || 10
+      pageSize || 10,
+      searchTerm
     );
     const totalCount = await bloggersRepository.getTotalCount();
     const pagesCount = Math.ceil(totalCount / (pageSize || 10));

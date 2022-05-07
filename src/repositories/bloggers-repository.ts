@@ -5,14 +5,16 @@ import { bloggersCollection } from "./db-config";
 export const bloggersRepository = {
   async getBloggers(
     pageNumber: number,
-    pageSize: number
+    pageSize: number,
+    searchTerm?: string
   ): Promise<Array<Blogger>> {
-    const bloggers: Array<Blogger> = await bloggersCollection
-      .find({}, { projection: { _id: 0 } })
+    const bloggers: Array<any> = await bloggersCollection
+      .find({ name: { $regex: searchTerm || "" } })
+      .project({ _id: 0 })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .toArray();
-    return bloggers;
+    return bloggers as Blogger[];
   },
   async getTotalCount(): Promise<number> {
     return await bloggersCollection.countDocuments();

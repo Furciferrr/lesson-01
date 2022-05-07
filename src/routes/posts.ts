@@ -26,7 +26,10 @@ router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
 });
 
 router.get("/", async (req: Request, res: Response) => {
-  const posts = await postsService.getPosts();
+  const pageNumber = req.query.PageNumber as string;
+  const pageSize = req.query.PageSize as string;
+
+  const posts = await postsService.getPosts(+pageNumber, +pageSize);
   res.send(posts);
 });
 
