@@ -22,7 +22,7 @@ export const bloggersService = {
       pageSize || 10,
       searchTerm
     );
-    const totalCount = await bloggersRepository.getTotalCount();
+    const totalCount = await bloggersRepository.getTotalCount(searchTerm);
     const pagesCount = Math.ceil(totalCount / (pageSize || 10));
     const buildResponse = {
       pagesCount,

@@ -16,8 +16,8 @@ export const bloggersRepository = {
       .toArray();
     return bloggers as Blogger[];
   },
-  async getTotalCount(): Promise<number> {
-    return await bloggersCollection.countDocuments();
+  async getTotalCount(searchTerm?: string): Promise<number> {
+    return await bloggersCollection.countDocuments({ name: { $regex: searchTerm || "" } });
   },
 
   async getBloggerById(id: number): Promise<Blogger | null> {
