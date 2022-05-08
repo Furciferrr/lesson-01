@@ -113,4 +113,18 @@ router.get("/:id/comments", authMiddleware, async (req: Request, res: Response) 
   return res.send(comments);
 });
 
+router.delete("/:id/comments", authMiddleware, async (req: Request, res: Response) => {
+  const foundPost = await postsService.getPostById(+req.params.id);
+  if (!foundPost) {
+    return res.status(404).send();
+  }
+
+  req.user?.id
+
+
+ 
+
+  return res.sendStatus(204);
+});
+
 export default router;
