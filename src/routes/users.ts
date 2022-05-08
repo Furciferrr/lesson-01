@@ -1,6 +1,7 @@
 import { userService } from "./../services/users-service";
 import express, { Request, Response } from "express";
 import { validateAndConvert } from "../validator";
+import { authBaseMiddleware } from "../middlewares/basic-middleware";
 import { UserDto } from "../dto";
 
 const router = express.Router();
@@ -12,7 +13,7 @@ router.get("/", async (req: Request, res: Response) => {
   res.send(users);
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(UserDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
@@ -25,7 +26,7 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
   const isRemoved = await userService.deleteUserById(+req.params.id);
   if (!isRemoved) {
     return res.sendStatus(404);

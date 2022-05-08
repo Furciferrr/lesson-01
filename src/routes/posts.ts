@@ -9,7 +9,7 @@ import { validateAndConvert } from "../validator";
 
 const router = express.Router();
 
-router.post("/", authMiddleware, async (req: Request, res: Response) => {
+router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(PostDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
@@ -42,7 +42,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   res.send(foundPost);
 });
 
-router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
+router.put("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
   if (!Object.keys(req.body).length) {
     return res.sendStatus(400);
   }
@@ -64,7 +64,7 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
   res.sendStatus(updatedPost);
 });
 
-router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
+router.delete("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
   const isRemoved = await postsService.deletePostById(+req.params.id);
   if (!isRemoved) {
     return res.sendStatus(404);
