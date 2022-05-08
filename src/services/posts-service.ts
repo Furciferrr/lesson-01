@@ -6,7 +6,10 @@ import { bloggersService } from "./bloggers-service";
 
 export const postsService = {
   async getPosts(pageNumber = 1, pageSize = 10): Promise<ResponseType<Post>> {
-    const posts = await postRepository.getPosts(pageNumber || 1, pageSize || 10);
+    const posts = await postRepository.getPosts(
+      pageNumber || 1,
+      pageSize || 10
+    );
     const totalCount = await postRepository.getTotalCount();
     const pagesCount = Math.ceil(totalCount / (pageSize || 10));
     const buildResponse = {
@@ -24,9 +27,9 @@ export const postsService = {
     pageNumber = 1,
     pageSize = 10
   ): Promise<ResponseType<Post> | false> {
-    const blogger = await bloggersService.getBloggerById(bloggerId)
-    if(!blogger) {
-      return false
+    const blogger = await bloggersService.getBloggerById(bloggerId);
+    if (!blogger) {
+      return false;
     }
     const resultPosts = await postRepository.getPostByBloggerId(
       bloggerId,
@@ -35,10 +38,10 @@ export const postsService = {
     );
     const { pagination, ...result } = resultPosts;
     return {
-      totalCount: pagination[0].totalCount,
-      pageSize: pageSize || 10,
-      page: pageNumber | 1,
       pagesCount: Math.ceil(pagination[0].totalCount / (pageSize || 10)),
+      page: pageNumber | 1,
+      pageSize: pageSize || 10,
+      totalCount: pagination[0].totalCount,
       ...result,
     };
   },

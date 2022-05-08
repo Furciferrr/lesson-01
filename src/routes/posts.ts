@@ -79,6 +79,9 @@ router.put("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
     req.body
   );
 
+  //@ts-ignore
+  updatedPost.bloggerId = +updatedPost.bloggerId
+
   res.sendStatus(updatedPost);
 });
 
