@@ -27,7 +27,7 @@ export const userRepository = {
     return user;
   },
 
-  async getUserById(id: number): Promise<UserDBType | null> {
+  async getUserById(id: string): Promise<UserDBType | null> {
     const user: UserDBType | null = await usersCollection.findOne(
       { id },
       { projection: { _id: 0 } }
@@ -38,7 +38,7 @@ export const userRepository = {
     return user;
   },
 
-  async deleteUserById(id: number): Promise<boolean> {
+  async deleteUserById(id: string): Promise<boolean> {
     const result = await usersCollection.deleteOne({ id });
     return result.deletedCount === 1;
   },

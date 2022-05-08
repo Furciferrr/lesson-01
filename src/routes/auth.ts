@@ -5,13 +5,14 @@ import { validateAndConvert } from "../validator";
 
 const router = express.Router();
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/login", async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(UserDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   }
+
   const checkResult = await userService.checkCredentials(
-    req.body.username,
+    req.body.login,
     req.body.password
   );
   if (checkResult.resultCode === 0) {

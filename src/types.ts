@@ -48,7 +48,7 @@ export interface PaginationType {
 export interface UserViewType extends Omit<UserDBType, "hashPassword"> {}
 
 export interface UserDBType {
-  id: number;
+  id: string;
   login: string;
   hashPassword: string;
 }

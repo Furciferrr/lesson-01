@@ -7,8 +7,8 @@ import { UserDto } from "../dto";
 const router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
-  const pageNumber = req.query.pageNumber as string;
-  const pageSize = req.query.pageSize as string;
+  const pageNumber = req.query.PageNumber as string;
+  const pageSize = req.query.PageSize as string;
   const users = await userService.getUsers(+pageNumber, +pageSize);
   res.send(users);
 });
@@ -27,7 +27,7 @@ router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
 });
 
 router.delete("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
-  const isRemoved = await userService.deleteUserById(+req.params.id);
+  const isRemoved = await userService.deleteUserById(req.params.id);
   if (!isRemoved) {
     return res.sendStatus(404);
   }

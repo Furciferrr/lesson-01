@@ -28,11 +28,11 @@ export const userService = {
     return buildResponse;
   },
 
-  async deleteUserById(id: number): Promise<boolean> {
+  async deleteUserById(id: string): Promise<boolean> {
     return await userRepository.deleteUserById(id);
   },
 
-  async getUserById(id: number): Promise<UserViewType | null> {
+  async getUserById(id: string): Promise<UserViewType | null> {
     const user = await userRepository.getUserById(id);
     if (!user) {
       return null;
@@ -47,7 +47,7 @@ export const userService = {
     }
     const hashPassword = await this._generateHash(user.password);
     const newUser = {
-      id: getRandomNumber(),
+      id: getRandomNumber().toString(),
       login: user.login,
       hashPassword,
     };

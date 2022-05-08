@@ -20,7 +20,7 @@ app.use("/bloggers", bloggersRouter);
 app.use("/posts", postsRouter);
 app.use("/videos", videosRouter);
 app.use("/users", usersRoute);
-app.use("/login", authRoute);
+app.use("/auth", authRoute);
 app.use("/comments", commentsRouter);
 
 app.get("/", (req: Request, res: Response) => {
