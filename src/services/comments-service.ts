@@ -4,23 +4,23 @@ import { commentRepository } from "../repositories/comments-repository";
 import { getRandomNumber } from "../utils";
 
 export const commentService = {
-  async getCommentById(id: number): Promise<CommentDBType | null> {
+  async getCommentById(id: string): Promise<CommentDBType | null> {
     return commentRepository.getCommentById(id);
   },
 
   async updateCommentById(
-    id: number,
+    id: string,
     commentDto: CommentDto
   ): Promise<boolean> {
     return commentRepository.updateCommentById(id, commentDto);
   },
 
-  async deleteCommentById(id: number): Promise<boolean> {
+  async deleteCommentById(id: string): Promise<boolean> {
     return commentRepository.deleteCommentById(id);
   },
 
   async getCommentsByPostId(
-    id: number,
+    id: string,
     pageNumber = 1,
     pageSize = 10
   ): Promise<ResponseType<CommentResponse>> {
@@ -39,9 +39,9 @@ export const commentService = {
     };
   },
 
-  async createComment(postId: number, commentDto: CommentDto, user: UserViewType) {
+  async createComment(postId: string, commentDto: CommentDto, user: UserViewType) {
     const newComment: CommentDBType = {
-      id: getRandomNumber(),
+      id: getRandomNumber().toString(),
       content: commentDto.content,
       userId: user.id.toString(),
       userLogin: user.login,

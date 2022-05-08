@@ -8,7 +8,7 @@ import { validateAndConvert } from "../validator";
 const router = express.Router();
 
 router.get("/:id", async (req: Request, res: Response) => {
-  const comment = await commentService.getCommentById(+req.params.id);
+  const comment = await commentService.getCommentById(req.params.id);
 
   if (!comment) {
     return res.status(404).send();
@@ -25,14 +25,14 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
     return res.status(400).send(conversionResult.error);
   }
 
-  const comment = await commentService.getCommentById(+req.params.id);
-
+  const comment = await commentService.getCommentById(req.params.id);
+  //@ts-ignore
   if (comment?.userId !== req.user?.id) {
     return res.sendStatus(403);
   }
 
   const updatedComment = await commentService.updateCommentById(
-    +req.params.id,
+    req.params.id,
     req.body
   );
 
@@ -47,12 +47,13 @@ router.delete(
   "/:id",
   authBaseMiddleware,
   async (req: Request, res: Response) => {
-    const comment = await commentService.getCommentById(+req.params.id);
+    const comment = await commentService.getCommentById(req.params.id);
 
+    //@ts-ignore
     if (comment?.userId !== req.user?.id) {
       return res.sendStatus(403);
     }
-    const isRemoved = await commentService.deleteCommentById(+req.params.id);
+    const isRemoved = await commentService.deleteCommentById(req.params.id);
     if (!isRemoved) {
       return res.sendStatus(404);
     }

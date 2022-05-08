@@ -3,12 +3,12 @@ import { CommentDto } from "../dto";
 import { commentsCollection } from "./db-config";
 
 export const commentRepository = {
-  async getCommentById(id: number): Promise<CommentDBType | null> {
+  async getCommentById(id: string): Promise<CommentDBType | null> {
     return commentsCollection.findOne({ id }, { projection: { _id: 0 } });
   },
 
   async updateCommentById(
-    id: number,
+    id: string,
     commentDto: CommentDto
   ): Promise<boolean> {
     const result = await commentsCollection.updateOne(
@@ -18,13 +18,13 @@ export const commentRepository = {
     return result.modifiedCount === 1;
   },
 
-  async deleteCommentById(id: number): Promise<boolean> {
+  async deleteCommentById(id: string): Promise<boolean> {
     const result = await commentsCollection.deleteOne({ id });
     return result.deletedCount === 1;
   },
 
   async getCommentsByPostId(
-    id: number,
+    id: string,
     pageNumber: number,
     pageSize: number
   ): Promise<DBType<CommentResponse>> {

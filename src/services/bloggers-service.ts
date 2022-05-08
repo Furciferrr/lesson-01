@@ -33,13 +33,13 @@ export const bloggersService = {
     };
     return buildResponse;
   },
-  async getBloggerById(id: number): Promise<Blogger | null> {
+  async getBloggerById(id: string): Promise<Blogger | null> {
     const bloggers: Blogger | null = await bloggersRepository.getBloggerById(
       id
     );
     return bloggers;
   },
-  async deleteBloggerById(id: number): Promise<boolean> {
+  async deleteBloggerById(id: string): Promise<boolean> {
     const result = await bloggersRepository.deleteBloggerById(id);
     if (result) {
       await postRepository.deletePostsByBloggerId(id);
@@ -48,12 +48,12 @@ export const bloggersService = {
       return false;
     }
   },
-  async updateBloggerById(id: number, dto: BloggerDto): Promise<boolean> {
+  async updateBloggerById(id: string, dto: BloggerDto): Promise<boolean> {
     return await bloggersRepository.updateBloggerById(id, dto);
   },
   async createBlogger(blogger: BloggerDto): Promise<Blogger> {
     const newBlogger: Blogger = {
-      id: getRandomNumber(),
+      id: getRandomNumber().toString(),
       name: blogger.name,
       youtubeUrl: blogger.youtubeUrl,
     };

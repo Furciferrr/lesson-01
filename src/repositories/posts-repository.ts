@@ -13,14 +13,14 @@ export const postRepository = {
   async getTotalCount(): Promise<number> {
     return await postsCollection.countDocuments();
   },
-  async getPostById(id: number): Promise<Post | null> {
+  async getPostById(id: string): Promise<Post | null> {
     return postsCollection.findOne({ id }, { projection: { _id: 0 } });
   },
-  async deletePostById(id: number): Promise<boolean> {
+  async deletePostById(id: string): Promise<boolean> {
     const result = await postsCollection.deleteOne({ id });
     return result.deletedCount === 1;
   },
-  async deletePostsByBloggerId(id: number): Promise<boolean> {
+  async deletePostsByBloggerId(id: string): Promise<boolean> {
     try {
       await postsCollection.deleteMany({ bloggerId: id });
       return true;
@@ -29,7 +29,7 @@ export const postRepository = {
       return false;
     }
   },
-  async updatePostById(id: number, postDto: UpdatePostDto): Promise<boolean> {
+  async updatePostById(id: string, postDto: UpdatePostDto): Promise<boolean> {
     const result = await postsCollection.updateOne({ id }, { $set: postDto });
 
     return result.modifiedCount === 1;
@@ -42,7 +42,7 @@ export const postRepository = {
   },
 
   async getPostByBloggerId(
-    bloggerId: number,
+    bloggerId: string,
     pageNumber: number,
     pageSize: number
   ): Promise<DBType<Post>> {

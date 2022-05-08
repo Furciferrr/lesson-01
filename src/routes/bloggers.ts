@@ -11,15 +11,19 @@ const router = express.Router();
 router.get("/", async (req: Request, res: Response) => {
   const pageNumber = req.query.PageNumber as string;
   const pageSize = req.query.PageSize as string;
-  const searchTerm = req.query.SearchNameTerm as string
+  const searchTerm = req.query.SearchNameTerm as string;
 
-  const bloggers = await bloggersService.getBloggers(+pageNumber, +pageSize, searchTerm);
+  const bloggers = await bloggersService.getBloggers(
+    +pageNumber,
+    +pageSize,
+    searchTerm
+  );
 
   res.status(200).send(bloggers);
 });
 
 router.get("/:id", async (req: Request, res: Response) => {
-  const foundBlogger = await bloggersService.getBloggerById(+req.params.id);
+  const foundBlogger = await bloggersService.getBloggerById(req.params.id);
 
   if (!foundBlogger) {
     return res.status(404).send();
@@ -39,7 +43,7 @@ router.put("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
   }
 
   const newBlogger = await bloggersService.updateBloggerById(
-    +req.params.id,
+    req.params.id,
     req.body
   );
 
@@ -57,14 +61,12 @@ router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
   } else {
     const newBlogger = await bloggersService.createBlogger(req.body);
     if (!newBlogger) {
-      return res
-        .status(400)
-        .send({
-          errorsMessages: [
-            { message: "bloggerId incorrect", field: "bloggerId" },
-          ],
-          resultCode: 1,
-        });
+      return res.status(400).send({
+        errorsMessages: [
+          { message: "bloggerId incorrect", field: "bloggerId" },
+        ],
+        resultCode: 1,
+      });
     }
     res.status(201).send(newBlogger);
   }
@@ -74,7 +76,7 @@ router.delete(
   "/:id",
   authBaseMiddleware,
   async (req: Request, res: Response) => {
-    const result = await bloggersService.deleteBloggerById(+req.params.id);
+    const result = await bloggersService.deleteBloggerById(req.params.id);
     if (!result) {
       return res.sendStatus(404);
     }
@@ -88,7 +90,6 @@ router.post(
   "/:bloggerId/posts",
   authBaseMiddleware,
   async (req: Request, res: Response) => {
-
     const conversionResult = await validateAndConvert(
       PostDtoWithoutBlogger,
       req.body
@@ -98,7 +99,7 @@ router.post(
     } else {
       const newPost = await postsService.createPost({
         ...req.body,
-        bloggerId: +req.params.bloggerId,
+        bloggerId: req.params.bloggerId,
       });
       if (!newPost) {
         return res.sendStatus(404);
@@ -112,7 +113,7 @@ router.get("/:bloggerId/posts", async (req: Request, res: Response) => {
   const pageNumber = req.query.PageNumber as string;
   const pageSize = req.query.PageSize as string;
   const posts = await postsService.getPostsByBloggerId(
-    +req.params.bloggerId,
+    req.params.bloggerId,
     +pageNumber,
     +pageSize
   );

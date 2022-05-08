@@ -1,17 +1,17 @@
 import { WithId } from "mongodb";
 
 export interface Blogger {
-  id: number;
+  id: string;
   name: string;
   youtubeUrl: string;
 }
 
 export interface Post {
-  id: number;
+  id: string;
   title: string;
   shortDescription: string;
   content: string;
-  bloggerId: number;
+  bloggerId: string;
   bloggerName: string;
 }
 
@@ -62,12 +62,12 @@ export interface ResponseType<T> {
 }
 
 export interface CommentDBType {
-  id: number;
+  id: string;
   content: string;
   userId: string;
   userLogin: string;
   addedAt: string;
-  postId: number;
+  postId: string;
 }
 
 export type DBType<T> = {

@@ -20,18 +20,18 @@ export const bloggersRepository = {
     return await bloggersCollection.countDocuments({ name: { $regex: searchTerm || "" } });
   },
 
-  async getBloggerById(id: number): Promise<Blogger | null> {
+  async getBloggerById(id: string): Promise<Blogger | null> {
     const blogger: Blogger | null = await bloggersCollection.findOne(
       { id },
       { projection: { _id: 0 } }
     );
     return blogger;
   },
-  async deleteBloggerById(id: number): Promise<boolean> {
+  async deleteBloggerById(id: string): Promise<boolean> {
     const result = await bloggersCollection.deleteOne({ id });
     return result.deletedCount === 1;
   },
-  async updateBloggerById(id: number, dto: BloggerDto): Promise<boolean> {
+  async updateBloggerById(id: string, dto: BloggerDto): Promise<boolean> {
     const result = await bloggersCollection.updateOne(
       { id },
       { $set: { ...dto } }

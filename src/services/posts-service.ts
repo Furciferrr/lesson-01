@@ -20,7 +20,7 @@ export const postsService = {
   },
 
   async getPostsByBloggerId(
-    bloggerId: number,
+    bloggerId: string,
     pageNumber = 1,
     pageSize = 10
   ): Promise<ResponseType<Post> | false> {
@@ -43,14 +43,14 @@ export const postsService = {
     };
   },
 
-  async getPostById(id: number): Promise<Post | null> {
+  async getPostById(id: string): Promise<Post | null> {
     return postRepository.getPostById(id);
   },
-  async deletePostById(id: number): Promise<boolean> {
+  async deletePostById(id: string): Promise<boolean> {
     return await postRepository.deletePostById(id);
   },
   async updatePostById(
-    id: number,
+    id: string,
     postDto: UpdatePostDto
   ): Promise<400 | 404 | 204> {
     const blogger = await bloggersService.getBloggerById(postDto.bloggerId);
@@ -67,7 +67,7 @@ export const postsService = {
       return false;
     }
     const newPost: Post = {
-      id: getRandomNumber(),
+      id: getRandomNumber().toString(),
       title: postDto.title,
       shortDescription: postDto.shortDescription,
       content: postDto.content,

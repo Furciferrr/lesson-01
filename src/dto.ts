@@ -45,7 +45,7 @@ export class PostDto {
   @MaxLength(1000)
   readonly content: string;
   @IsNotEmpty({ message: "bloggerId field is required" })
-  readonly bloggerId: number;
+  readonly bloggerId: string;
 }
 
 export class PostDtoWithoutBlogger {
@@ -84,7 +84,7 @@ export class UpdatePostDto {
   readonly content: string;
   @IsOptional()
   @IsNotEmpty()
-  readonly bloggerId: number;
+  readonly bloggerId: string;
 }
 
 export class VideoDto {
