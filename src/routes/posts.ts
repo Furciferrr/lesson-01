@@ -16,21 +16,17 @@ router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
   }
   const blogger = await bloggersService.getBloggerById(req.body.bloggerId);
   if (!blogger) {
-    return res
-      .status(400)
-      .send({
-        errorsMessages: [
-          { message: "bloggerId incorrect", field: "bloggerId" },
-        ],
-        resultCode: 1,
-      });
+    return res.status(400).send({
+      errorsMessages: [{ message: "bloggerId incorrect", field: "bloggerId" }],
+      resultCode: 1,
+    });
   }
   const newPost = await postsService.createPost(req.body);
   if (!newPost) {
     return res.status(400).send();
   }
   //@ts-ignore
-  newPost.bloggerId = +newPost.bloggerId
+  newPost.bloggerId = +newPost.bloggerId;
   res.status(201).send(newPost);
 });
 
@@ -49,7 +45,7 @@ router.get("/:id", async (req: Request, res: Response) => {
     return res.status(404).send();
   }
   //@ts-ignore
-  foundPost.bloggerId = +foundPost.bloggerId
+  foundPost.bloggerId = +foundPost.bloggerId;
   res.send(foundPost);
 });
 
@@ -58,31 +54,28 @@ router.put("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
     return res.sendStatus(400);
   }
   const conversionResult = await validateAndConvert(UpdatePostDto, req.body);
+
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
   }
 
   const blogger = await bloggersService.getBloggerById(req.body.bloggerId);
   if (!blogger) {
-    return res
-      .status(400)
-      .send({
-        errorsMessages: [
-          { message: "bloggerId incorrect", field: "bloggerId" },
-        ],
-        resultCode: 1,
-      });
+    return res.status(400).send({
+      errorsMessages: [{ message: "bloggerId incorrect", field: "bloggerId" }],
+      resultCode: 1,
+    });
   }
 
   const updatedPost = await postsService.updatePostById(
     req.params.id,
     req.body
   );
-
-  //@ts-ignore
-  updatedPost.bloggerId = +updatedPost.bloggerId
-
-  res.sendStatus(updatedPost);
+  if (updatedPost) {
+    res.sendStatus(204);
+  } else {
+    res.sendStatus(404);
+  }
 });
 
 router.delete(

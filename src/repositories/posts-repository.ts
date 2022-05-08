@@ -29,11 +29,13 @@ export const postRepository = {
       return false;
     }
   },
-  async updatePostById(id: string, postDto: UpdatePostDto): Promise<boolean> {
-    const result = await postsCollection.updateOne({ id }, { $set: postDto });
 
+  async updatePostById(id: string, postDto: UpdatePostDto): Promise<boolean> {
+
+    const result = await postsCollection.updateOne({ id }, { $set: postDto });
     return result.modifiedCount === 1;
   },
+
   async createPost(post: Post) {
     await postsCollection.insertOne(post, {
       forceServerObjectId: true,
