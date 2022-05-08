@@ -9,7 +9,7 @@ import { validateAndConvert } from "../validator";
 
 const router = express.Router();
 
-router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
+router.post("/", authMiddleware, async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(PostDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
@@ -42,7 +42,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   res.send(foundPost);
 });
 
-router.put("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
+router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
   if (!Object.keys(req.body).length) {
     return res.sendStatus(400);
   }
@@ -64,7 +64,7 @@ router.put("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
   res.sendStatus(updatedPost);
 });
 
-router.delete("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
+router.delete("/:id", authMiddleware, async (req: Request, res: Response) => {
   const isRemoved = await postsService.deletePostById(+req.params.id);
   if (!isRemoved) {
     return res.sendStatus(404);
@@ -75,7 +75,7 @@ router.delete("/:id", authBaseMiddleware, async (req: Request, res: Response) =>
   }
 });
 
-router.post("/:id/comments", authBaseMiddleware, async (req: Request, res: Response) => {
+router.post("/:id/comments", authMiddleware, async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(CommentDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
@@ -97,7 +97,7 @@ router.post("/:id/comments", authBaseMiddleware, async (req: Request, res: Respo
   res.status(201).send(commentResponse);
 });
 
-router.get("/:id/comments", authBaseMiddleware, async (req: Request, res: Response) => {
+router.get("/:id/comments", authMiddleware, async (req: Request, res: Response) => {
   const pageNumber = req.query.PageNumber as string;
   const pageSize = req.query.PageSize as string;
   const foundPost = await postsService.getPostById(+req.params.id);
