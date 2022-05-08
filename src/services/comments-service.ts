@@ -26,8 +26,8 @@ export const commentService = {
   ): Promise<ResponseType<CommentResponse>> {
     const resultComments = await commentRepository.getCommentsByPostId(
       id,
-      pageNumber,
-      pageSize
+      pageNumber || 1,
+      pageSize || 10
     );
     const { pagination, ...result } = resultComments;
     return {

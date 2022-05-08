@@ -94,12 +94,19 @@ export class VideoDto {
 
 export class UserDto {
   @IsNotEmpty({ message: "username field is required" })
-  readonly username: string;
+  @IsNotBlank('', {message: 'should be not blank'})
+  @MinLength(1)
+  readonly login: string;
   @IsNotEmpty({ message: "password field is required" })
+  @IsNotBlank('', {message: 'should be not blank'})
+  @MinLength(1)
   readonly password: string;
 }
 
 export class CommentDto {
   @IsNotEmpty({ message: "content field is required" })
+  @IsNotBlank('', {message: 'should be not blank'})
+  @MinLength(20)
+  @MaxLength(300)
   readonly content: string;
 }

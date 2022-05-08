@@ -12,6 +12,10 @@ export const userRepository = {
       .toArray();
   },
 
+  async getTotalCount(): Promise<number> {
+    return await usersCollection.countDocuments();
+  },
+
   async getUserByLogin(login: string): Promise<UserDBType | null> {
     const user: UserDBType | null = await usersCollection.findOne(
       { login },
@@ -35,7 +39,8 @@ export const userRepository = {
   },
 
   async deleteUserById(id: number): Promise<boolean> {
-    return true;
+    const result = await usersCollection.deleteOne({ id });
+    return result.deletedCount === 1;
   },
 
   async createUser(user: UserDBType): Promise<UserViewType> {

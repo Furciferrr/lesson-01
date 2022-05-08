@@ -50,7 +50,7 @@ router.put("/:id", authMiddleware, async (req: Request, res: Response) => {
   res.sendStatus(204);
 });
 
-router.post("/", authMiddleware, async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response) => {
   const conversionResult = await validateAndConvert(BloggerDto, req.body);
   if (conversionResult.error) {
     return res.status(400).send(conversionResult.error);
