@@ -44,8 +44,6 @@ router.get("/:id", async (req: Request, res: Response) => {
   if (!foundPost) {
     return res.status(404).send();
   }
-  //@ts-ignore
-  foundPost.bloggerId = +foundPost.bloggerId;
   res.send(foundPost);
 });
 
