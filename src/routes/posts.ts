@@ -25,6 +25,8 @@ router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
   if (!newPost) {
     return res.status(400).send();
   }
+  //@ts-ignore
+  newPost.bloggerId = +newPost.bloggerId;
   res.status(201).send(newPost);
 });
 
@@ -42,8 +44,7 @@ router.get("/:id", async (req: Request, res: Response) => {
   if (!foundPost) {
     return res.status(404).send();
   }
-  //@ts-ignore
-  foundPost.bloggerId = +foundPost.bloggerId;
+  
   res.send(foundPost);
 });
 

@@ -104,7 +104,10 @@ router.post(
       if (!newPost) {
         return res.sendStatus(404);
       }
+      //@ts-ignore
+      newPost.bloggerId = +newPost.bloggerId;
       res.status(201).send(newPost);
+
     }
   }
 );
