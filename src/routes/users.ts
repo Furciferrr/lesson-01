@@ -1,40 +1,22 @@
-import { userService } from "./../services/users-service";
-import express, { Request, Response } from "express";
-import { validateAndConvert } from "../validator";
+import { VideosController } from './../controllers/videos';
+import express from "express";
 import { authBaseMiddleware } from "../middlewares/basic-middleware";
-import { UserDto } from "../dto";
+import { UserRepository } from "../repositories/users-repository";
+import { BodyValidator } from "../validator";
+import { UserController } from "../controllers/users";
+import { UserService } from "../services/users-service";
+import { ioc } from "../IocContainer";
+import { TYPES } from '../IocTypes';
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
-  const pageNumber = req.query.PageNumber as string;
-  const pageSize = req.query.PageSize as string;
-  const users = await userService.getUsers(+pageNumber, +pageSize);
-  res.send(users);
-});
 
-router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
-  const conversionResult = await validateAndConvert(UserDto, req.body);
-  if (conversionResult.error) {
-    return res.status(400).send(conversionResult.error);
-  }
-  const newUser = await userService.createUser(req.body);
-  if (newUser) {
-    res.status(201).send(newUser);
-  } else {
-    res.sendStatus(409);
-  }
-});
+const userController = ioc.get<UserController>(TYPES.UserController);
 
-router.delete("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
-  const isRemoved = await userService.deleteUserById(req.params.id);
-  if (!isRemoved) {
-    return res.sendStatus(404);
-  }
+router.get("/", userController.getUsers.bind(userController));
 
-  if (isRemoved) {
-    res.sendStatus(204);
-  }
-});
+router.post("/", authBaseMiddleware, userController.createUser.bind(userController));
+
+router.delete("/:id", authBaseMiddleware, userController.deleteUserById.bind(userController));
 
 export default router;

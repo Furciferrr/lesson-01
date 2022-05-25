@@ -1,130 +1,44 @@
-import { postsService } from "./../services/posts-service";
-import express, { Request, Response } from "express";
-import { BloggerDto, PostDtoWithoutBlogger, UpdateBloggerDto } from "../dto";
-import { validateAndConvert } from "../validator";
-import { bloggersService } from "../services/bloggers-service";
-import { authMiddleware } from "../middlewares/auth-middleware";
+import express from "express";
 import { authBaseMiddleware } from "../middlewares/basic-middleware";
+import { BloggerController } from "../controllers/bloggers";
+import { ioc } from "../IocContainer";
+import { TYPES } from "../IocTypes";
 
 const router = express.Router();
 
-router.get("/", async (req: Request, res: Response) => {
-  const pageNumber = req.query.PageNumber as string;
-  const pageSize = req.query.PageSize as string;
-  const searchTerm = req.query.SearchNameTerm as string;
+const bloggerController = ioc.get<BloggerController>(TYPES.BloggerController);
 
-  const bloggers = await bloggersService.getBloggers(
-    +pageNumber,
-    +pageSize,
-    searchTerm
-  );
+router.get("/", bloggerController.getBloggers.bind(bloggerController));
 
-  res.status(200).send(bloggers);
-});
+router.get("/:id", bloggerController.getPostsByBloggerId.bind(bloggerController));
 
-router.get("/:id", async (req: Request, res: Response) => {
-  const foundBlogger = await bloggersService.getBloggerById(req.params.id);
+router.put(
+  "/:id",
+  authBaseMiddleware,
+  bloggerController.updateBloggerById.bind(bloggerController)
+);
 
-  if (!foundBlogger) {
-    return res.status(404).send();
-  }
-  res.send(foundBlogger);
-});
-
-router.put("/:id", authBaseMiddleware, async (req: Request, res: Response) => {
-  if (!req.body || !Object.keys(req.body).length) {
-    return res.sendStatus(400);
-  }
-
-  const conversionResult = await validateAndConvert(UpdateBloggerDto, req.body);
-
-  if (conversionResult.error) {
-    return res.status(400).send(conversionResult.error);
-  }
-
-  const newBlogger = await bloggersService.updateBloggerById(
-    req.params.id,
-    req.body
-  );
-
-  if (!newBlogger) {
-    return res.sendStatus(404);
-  }
-
-  res.sendStatus(204);
-});
-
-router.post("/", authBaseMiddleware, async (req: Request, res: Response) => {
-  const conversionResult = await validateAndConvert(BloggerDto, req.body);
-  if (conversionResult.error) {
-    return res.status(400).send(conversionResult.error);
-  } else {
-    const newBlogger = await bloggersService.createBlogger(req.body);
-    if (!newBlogger) {
-      return res.status(400).send({
-        errorsMessages: [
-          { message: "bloggerId incorrect", field: "bloggerId" },
-        ],
-        resultCode: 1,
-      });
-    }
-    res.status(201).send(newBlogger);
-  }
-});
+router.post(
+  "/",
+  authBaseMiddleware,
+  bloggerController.createBlogger.bind(bloggerController)
+);
 
 router.delete(
   "/:id",
   authBaseMiddleware,
-  async (req: Request, res: Response) => {
-    const result = await bloggersService.deleteBloggerById(req.params.id);
-    if (!result) {
-      return res.sendStatus(404);
-    }
-    if (result) {
-      return res.sendStatus(204);
-    }
-  }
+  bloggerController.deleteBloggerById.bind(bloggerController)
 );
 
 router.post(
   "/:bloggerId/posts",
   authBaseMiddleware,
-  async (req: Request, res: Response) => {
-    const conversionResult = await validateAndConvert(
-      PostDtoWithoutBlogger,
-      req.body
-    );
-    if (conversionResult.error) {
-      return res.status(400).send(conversionResult.error);
-    } else {
-      const newPost = await postsService.createPost({
-        ...req.body,
-        bloggerId: req.params.bloggerId,
-      });
-      if (!newPost) {
-        return res.sendStatus(404);
-      }
-      //@ts-ignore
-      newPost.bloggerId = +newPost.bloggerId;
-      res.status(201).send(newPost);
-
-    }
-  }
+  bloggerController.createPost.bind(bloggerController)
 );
 
-router.get("/:bloggerId/posts", async (req: Request, res: Response) => {
-  const pageNumber = req.query.PageNumber as string;
-  const pageSize = req.query.PageSize as string;
-  const posts = await postsService.getPostsByBloggerId(
-    req.params.bloggerId,
-    +pageNumber,
-    +pageSize
-  );
-
-  if (!posts) {
-    return res.status(404).send();
-  }
-  res.send(posts);
-});
+router.get(
+  "/:bloggerId/posts",
+  bloggerController.getPostsByBloggerId.bind(bloggerController)
+);
 
 export default router;

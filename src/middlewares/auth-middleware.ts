@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
 import { JWT_SECRET } from "../constants";
-import { userService } from "../services/users-service";
+import { ioc } from "../IocContainer";
+import { TYPES } from "../IocTypes";
+import { UserService } from "../services/users-service";
+
+const userService = ioc.get<UserService>(TYPES.UserService);
 
 export const authMiddleware = async (
   req: Request,
@@ -18,7 +22,7 @@ export const authMiddleware = async (
     if (!user) {
       return res.sendStatus(401);
     }
-   //@ts-ignore
+    //@ts-ignore
     req.user = user;
   } catch (e) {
     return res.sendStatus(401);

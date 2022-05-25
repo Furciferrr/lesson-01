@@ -23,7 +23,7 @@ export async function runDb() {
     // Use connect method to connect to the server
     await client.connect();
     await client.db(dbName).command({ ping: 1 });
-    console.log("Connected successfully to server");
+    console.log("Connected successfully to DB server");
   } catch (e) {
     console.log("Connected DB error:", e);
     await client.close();

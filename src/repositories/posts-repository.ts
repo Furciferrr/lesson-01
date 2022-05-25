@@ -1,47 +1,49 @@
+import { injectable } from "inversify";
 import { UpdatePostDto } from "../dto";
+import { IPostRepository } from "../interfaces";
 import { DBType, Post } from "../types";
 import { postsCollection } from "./db-config";
 
-export const postRepository = {
+
+@injectable()
+export class PostRepository implements IPostRepository {
   async getPosts(pageNumber: number, pageSize: number): Promise<Post[]> {
     return postsCollection
       .find({}, { projection: { _id: 0 } })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .toArray();
-  },
+  }
   async getTotalCount(): Promise<number> {
     return await postsCollection.countDocuments();
-  },
+  }
   async getPostById(id: string): Promise<Post | null> {
     return postsCollection.findOne({ id }, { projection: { _id: 0 } });
-  },
+  }
   async deletePostById(id: string): Promise<boolean> {
     const result = await postsCollection.deleteOne({ id });
     return result.deletedCount === 1;
-  },
+  }
   async deletePostsByBloggerId(id: string): Promise<boolean> {
     try {
       await postsCollection.deleteMany({ bloggerId: id });
       return true;
     } catch (e) {
-      console.log(e);
       return false;
     }
-  },
+  }
 
   async updatePostById(id: string, postDto: UpdatePostDto): Promise<boolean> {
-
     const result = await postsCollection.updateOne({ id }, { $set: postDto });
     return result.modifiedCount === 1;
-  },
+  }
 
-  async createPost(post: Post) {
+  async createPost(post: Post): Promise<Post> {
     await postsCollection.insertOne(post, {
       forceServerObjectId: true,
     });
     return post;
-  },
+  }
 
   async getPostByBloggerId(
     bloggerId: string,
@@ -64,5 +66,5 @@ export const postRepository = {
       ])
       .toArray();
     return result[0] as DBType<Post>;
-  },
-};
+  }
+}

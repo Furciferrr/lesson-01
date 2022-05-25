@@ -1,21 +1,28 @@
-import { sign, verify } from "jsonwebtoken";
+import { sign } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { ResponseType, UserViewType } from "./../types";
 import { UserDto } from "../dto";
-import { userRepository } from "../repositories/users-repository";
 import { getRandomNumber } from "../utils";
 import { JWT_SECRET } from "../constants";
+import { IUserRepository, IUserService } from "../interfaces";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../IocTypes";
 
-export const userService = {
+@injectable()
+export class UserService implements IUserService {
+  constructor(
+    @inject(TYPES.UserRepository)
+    private readonly userRepository: IUserRepository
+  ) {}
   async getUsers(
     pageNumber?: number,
     pageSize?: number
   ): Promise<ResponseType<UserViewType>> {
-    const users = await userRepository.getUsers(
+    const users = await this.userRepository.getUsers(
       pageNumber || 1,
       pageSize || 10
     );
-    const totalCount = await userRepository.getTotalCount();
+    const totalCount = await this.userRepository.getTotalCount();
     const pagesCount = Math.ceil(totalCount / (pageSize || 10));
     const buildResponse = {
       pagesCount,
@@ -26,22 +33,22 @@ export const userService = {
     };
 
     return buildResponse;
-  },
+  }
 
   async deleteUserById(id: string): Promise<boolean> {
-    return await userRepository.deleteUserById(id);
-  },
+    return await this.userRepository.deleteUserById(id);
+  }
 
   async getUserById(id: string): Promise<UserViewType | null> {
-    const user = await userRepository.getUserById(id);
+    const user = await this.userRepository.getUserById(id);
     if (!user) {
       return null;
     }
     return { login: user.login, id: user.id };
-  },
+  }
 
   async createUser(user: UserDto): Promise<UserViewType | null> {
-    const isUserExist = await userRepository.getUserByLogin(user.login);
+    const isUserExist = await this.userRepository.getUserByLogin(user.login);
     if (isUserExist) {
       return null;
     }
@@ -51,22 +58,22 @@ export const userService = {
       login: user.login,
       hashPassword,
     };
-    const result = await userRepository.createUser(newUser);
+    const result = await this.userRepository.createUser(newUser);
     return result;
-  },
-  generateJwt(user: any): string {
+  }
+  private generateJwt(user: any): string {
     return sign(
       {
         id: user.id,
       },
       JWT_SECRET
     );
-  },
+  }
   async checkCredentials(
     login: string,
     password: string
   ): Promise<{ resultCode: number; data: { token?: string | null } }> {
-    const user = await userRepository.getUserByLogin(login);
+    const user = await this.userRepository.getUserByLogin(login);
     if (!user) {
       return {
         resultCode: 1,
@@ -83,9 +90,9 @@ export const userService = {
         token: resultCompare ? token : null,
       },
     };
-  },
-  async _generateHash(password: string) {
+  }
+  private async _generateHash(password: string): Promise<string> {
     const hash = await bcrypt.hash(password, 10);
     return hash;
-  },
-};
+  }
+}

@@ -1,16 +1,30 @@
-import { postRepository } from "./../repositories/posts-repository";
 import { PostDto, UpdatePostDto } from "../dto";
 import { DBType, Post, ResponseType } from "../types";
 import { getRandomNumber } from "../utils";
-import { bloggersService } from "./bloggers-service";
+import {
+  IBloggerRepository,
+  IPostRepository,
+  IPostService,
+} from "../interfaces";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../IocTypes";
 
-export const postsService = {
+
+@injectable()
+export class PostService implements IPostService {
+  constructor(
+    @inject(TYPES.PostRepository)
+    private readonly postRepository: IPostRepository,
+    @inject(TYPES.BloggerRepository)
+    private readonly bloggerRepository: IBloggerRepository
+  ) {}
+
   async getPosts(pageNumber = 1, pageSize = 10): Promise<ResponseType<Post>> {
-    const posts = await postRepository.getPosts(
+    const posts = await this.postRepository.getPosts(
       pageNumber || 1,
       pageSize || 10
     );
-    const totalCount = await postRepository.getTotalCount();
+    const totalCount = await this.postRepository.getTotalCount();
     const pagesCount = Math.ceil(totalCount / (pageSize || 10));
     const buildResponse = {
       pagesCount,
@@ -20,18 +34,18 @@ export const postsService = {
       items: posts,
     };
     return buildResponse;
-  },
+  }
 
   async getPostsByBloggerId(
     bloggerId: string,
     pageNumber = 1,
     pageSize = 10
   ): Promise<ResponseType<Post> | false> {
-    const blogger = await bloggersService.getBloggerById(bloggerId);
+    const blogger = await this.bloggerRepository.getBloggerById(bloggerId);
     if (!blogger) {
       return false;
     }
-    const resultPosts = await postRepository.getPostByBloggerId(
+    const resultPosts = await this.postRepository.getPostByBloggerId(
       bloggerId,
       pageNumber || 1,
       pageSize || 10
@@ -44,28 +58,32 @@ export const postsService = {
       totalCount: pagination[0].totalCount,
       ...result,
     };
-  },
+  }
 
   async getPostById(id: string): Promise<Post | null> {
-    return postRepository.getPostById(id);
-  },
+    return this.postRepository.getPostById(id);
+  }
   async deletePostById(id: string): Promise<boolean> {
-    return await postRepository.deletePostById(id);
-  },
+    return await this.postRepository.deletePostById(id);
+  }
   async updatePostById(
     id: string,
     postDto: UpdatePostDto
   ): Promise<400 | 404 | 204> {
-    const blogger = await bloggersService.getBloggerById(postDto.bloggerId);
+    const blogger = await this.bloggerRepository.getBloggerById(
+      postDto.bloggerId
+    );
     if (!blogger) {
       return 400;
     }
-    const result = await postRepository.updatePostById(id, postDto);
+    const result = await this.postRepository.updatePostById(id, postDto);
 
     return result ? 204 : 404;
-  },
+  }
   async createPost(postDto: PostDto) {
-    const blogger = await bloggersService.getBloggerById(postDto.bloggerId);
+    const blogger = await this.bloggerRepository.getBloggerById(
+      postDto.bloggerId
+    );
     if (!blogger) {
       return false;
     }
@@ -77,7 +95,7 @@ export const postsService = {
       bloggerId: postDto.bloggerId,
       bloggerName: blogger.name,
     };
-    await postRepository.createPost(newPost);
+    await this.postRepository.createPost(newPost);
     return newPost;
-  },
-};
+  }
+}

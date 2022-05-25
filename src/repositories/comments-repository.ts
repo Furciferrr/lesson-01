@@ -1,11 +1,15 @@
 import { CommentDBType, CommentResponse, DBType } from "./../types";
 import { CommentDto } from "../dto";
 import { commentsCollection } from "./db-config";
+import { ICommentsRepository } from "../interfaces";
+import { injectable } from "inversify";
 
-export const commentRepository = {
+
+@injectable()
+export class CommentsRepository implements ICommentsRepository {
   async getCommentById(id: string): Promise<CommentDBType | null> {
     return commentsCollection.findOne({ id }, { projection: { _id: 0 } });
-  },
+  }
 
   async updateCommentById(
     id: string,
@@ -16,12 +20,12 @@ export const commentRepository = {
       { $set: commentDto }
     );
     return result.modifiedCount === 1;
-  },
+  }
 
   async deleteCommentById(id: string): Promise<boolean> {
     const result = await commentsCollection.deleteOne({ id });
     return result.deletedCount === 1;
-  },
+  }
 
   async getCommentsByPostId(
     id: string,
@@ -44,12 +48,12 @@ export const commentRepository = {
       ])
       .toArray();
     return result[0] as DBType<CommentResponse>;
-  },
+  }
 
   async createComment(comment: CommentDBType): Promise<CommentDBType> {
     commentsCollection.insertOne(comment, {
       forceServerObjectId: true,
     });
     return comment;
-  },
-};
+  }
+}

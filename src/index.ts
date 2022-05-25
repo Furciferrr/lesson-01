@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
+import "reflect-metadata";
 import bodyParser from "body-parser";
 import bloggersRouter from "./routes/bloggers";
 import postsRouter from "./routes/posts";

@@ -1,25 +1,12 @@
-import express, { Request, Response } from "express";
-import { UserDto } from "../dto";
-import { userService } from "../services/users-service";
-import { validateAndConvert } from "../validator";
+import express from "express";
+import { AuthController } from "../controllers/auth";
+import { ioc } from "../IocContainer";
+import { TYPES } from "../IocTypes";
 
 const router = express.Router();
 
-router.post("/login", async (req: Request, res: Response) => {
-  const conversionResult = await validateAndConvert(UserDto, req.body);
-  if (conversionResult.error) {
-    return res.status(400).send(conversionResult.error);
-  }
+const authController = ioc.get<AuthController>(TYPES.AuthController);
 
-  const checkResult = await userService.checkCredentials(
-    req.body.login,
-    req.body.password
-  );
-  if (checkResult.resultCode === 0) {
-    res.status(201).send(checkResult);
-  } else {
-    res.sendStatus(401);
-  }
-});
+router.post("/login", authController.login.bind(authController));
 
 export default router;
