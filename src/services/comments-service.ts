@@ -48,7 +48,7 @@ export class CommentsService implements ICommentsService {
       totalCount: pagination[0].totalCount,
       pageSize: pageSize || 10,
       page: pageNumber || 1,
-      pagesCount: Math.ceil(pagination[0].totalCount / pageSize),
+      pagesCount: Math.ceil(pagination[0].totalCount / (pageSize || 10)),
       ...result,
     };
   }
