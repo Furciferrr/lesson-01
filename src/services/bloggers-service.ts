@@ -10,7 +10,6 @@ import { getRandomNumber } from "../utils";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../IocTypes";
 
-
 @injectable()
 export class BloggerService implements IBloggerService {
   constructor(
@@ -47,9 +46,9 @@ export class BloggerService implements IBloggerService {
     return buildResponse;
   }
   async getBloggerById(id: string): Promise<Blogger | null> {
-    const bloggers: Blogger | null =
+    const blogger: Blogger | null =
       await this.bloggersRepository.getBloggerById(id);
-    return bloggers;
+    return blogger;
   }
   async deleteBloggerById(id: string): Promise<boolean> {
     const result = await this.bloggersRepository.deleteBloggerById(id);

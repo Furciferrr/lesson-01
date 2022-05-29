@@ -10,7 +10,7 @@ const bloggerController = ioc.get<BloggerController>(TYPES.BloggerController);
 
 router.get("/", bloggerController.getBloggers.bind(bloggerController));
 
-router.get("/:id", bloggerController.getPostsByBloggerId.bind(bloggerController));
+router.get("/:id", bloggerController.getBloggerById.bind(bloggerController));
 
 router.put(
   "/:id",

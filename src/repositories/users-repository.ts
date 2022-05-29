@@ -7,10 +7,10 @@ import { injectable } from "inversify";
 export class UserRepository implements IUserRepository {
   async getUsers(pageNumber = 1, pageSize = 10): Promise<UserViewType[]> {
     return usersCollection
-      .find({}, { projection: { _id: 0, hashPassword: 0 } })
+      .find({})
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .toArray();
+      .select(["-_id", "-hashPassword", "-__v"]);
   }
 
   async getTotalCount(): Promise<number> {
@@ -18,10 +18,9 @@ export class UserRepository implements IUserRepository {
   }
 
   async getUserByLogin(login: string): Promise<UserDBType | null> {
-    const user: UserDBType | null = await usersCollection.findOne(
-      { login },
-      { projection: { _id: 0 } }
-    );
+    const user: UserDBType | null = await usersCollection
+      .findOne({ login })
+      .select(["-_id", "-__v"]);;
     if (!user) {
       return null;
     }
@@ -29,10 +28,9 @@ export class UserRepository implements IUserRepository {
   }
 
   async getUserById(id: string): Promise<UserDBType | null> {
-    const user: UserDBType | null = await usersCollection.findOne(
-      { id },
-      { projection: { _id: 0 } }
-    );
+    const user: UserDBType | null = await usersCollection
+      .findOne({ id })
+      .select(["-_id", "-__v"]);;
     if (!user) {
       return null;
     }
@@ -45,10 +43,8 @@ export class UserRepository implements IUserRepository {
   }
 
   async createUser(user: UserDBType): Promise<UserViewType> {
-    await usersCollection.insertOne(user, {
-      forceServerObjectId: true,
-    });
+    await usersCollection.create(user);
     const { id, login } = user;
     return { id, login };
   }
-};
+}

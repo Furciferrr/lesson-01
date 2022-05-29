@@ -1,9 +1,8 @@
-import { IBloggerRepository } from './../interfaces';
+import { IBloggerRepository } from "./../interfaces";
 import { BloggerDto } from "../dto";
 import { Blogger } from "../types";
 import { bloggersCollection } from "./db-config";
-import { injectable } from 'inversify';
-
+import { injectable } from "inversify";
 
 @injectable()
 export class BloggerRepository implements IBloggerRepository {
@@ -14,10 +13,8 @@ export class BloggerRepository implements IBloggerRepository {
   ): Promise<Array<Blogger>> {
     const bloggers: Array<any> = await bloggersCollection
       .find({ name: { $regex: searchTerm || "" } })
-      .project({ _id: 0 })
       .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize)
-      .toArray();
+      .limit(pageSize);
     return bloggers as Blogger[];
   }
   async getTotalCount(searchTerm?: string): Promise<number> {
@@ -27,10 +24,9 @@ export class BloggerRepository implements IBloggerRepository {
   }
 
   async getBloggerById(id: string): Promise<Blogger | null> {
-    const blogger: Blogger | null = await bloggersCollection.findOne(
-      { id },
-      { projection: { _id: 0 } }
-    );
+    const blogger: Blogger | null = await bloggersCollection
+      .findOne({ id })
+      .select(["-_id", "-__v"]);
     return blogger;
   }
   async deleteBloggerById(id: string): Promise<boolean> {
@@ -46,9 +42,7 @@ export class BloggerRepository implements IBloggerRepository {
     return result.matchedCount === 1;
   }
   async createBlogger(blogger: Blogger): Promise<Blogger> {
-    await bloggersCollection.insertOne(blogger, {
-      forceServerObjectId: true,
-    });
+    await bloggersCollection.create(blogger);
     return blogger;
   }
 }

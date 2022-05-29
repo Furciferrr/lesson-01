@@ -7,10 +7,10 @@ import { videosCollection } from "./db-config";
 @injectable()
 export class VideosRepository implements IVideosRepository {
   async getVideos(): Promise<VideoType[]> {
-    return videosCollection.find({}, { projection: { _id: 0 } }).toArray();
+    return videosCollection.find({}).select(["-_id", "-__v"]);;
   }
   async getVideoById(id: number): Promise<VideoType | null> {
-    return videosCollection.findOne({ id }, { projection: { _id: 0 } });
+    return videosCollection.findOne({ id }).select(["-_id", "-__v"]);;;
   }
   async deleteVideoById(id: number): Promise<boolean> {
     const result = await videosCollection.deleteOne({ id });
@@ -29,9 +29,7 @@ export class VideosRepository implements IVideosRepository {
       title: title,
       author: "it-incubator.eu",
     };
-    await videosCollection.insertOne(newVideo, {
-      forceServerObjectId: true,
-    });
+    await videosCollection.create(newVideo);
     return newVideo;
   }
 }

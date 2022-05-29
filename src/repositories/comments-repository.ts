@@ -46,14 +46,11 @@ export class CommentsRepository implements ICommentsRepository {
           },
         },
       ])
-      .toArray();
     return result[0] as DBType<CommentResponse>;
   }
 
   async createComment(comment: CommentDBType): Promise<CommentDBType> {
-    commentsCollection.insertOne(comment, {
-      forceServerObjectId: true,
-    });
+    commentsCollection.create(comment);
     return comment;
   }
 }

@@ -9,10 +9,10 @@ import { postsCollection } from "./db-config";
 export class PostRepository implements IPostRepository {
   async getPosts(pageNumber: number, pageSize: number): Promise<Post[]> {
     return postsCollection
-      .find({}, { projection: { _id: 0 } })
+      .find({})
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .toArray();
+      .select(["-_id", "-__v"]);
   }
   async getTotalCount(): Promise<number> {
     return await postsCollection.countDocuments();
@@ -39,9 +39,7 @@ export class PostRepository implements IPostRepository {
   }
 
   async createPost(post: Post): Promise<Post> {
-    await postsCollection.insertOne(post, {
-      forceServerObjectId: true,
-    });
+    await postsCollection.create(post);
     return post;
   }
 
@@ -64,7 +62,6 @@ export class PostRepository implements IPostRepository {
           },
         },
       ])
-      .toArray();
     return result[0] as DBType<Post>;
   }
 }
