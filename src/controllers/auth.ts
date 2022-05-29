@@ -26,7 +26,7 @@ export class AuthController {
       req.body.password
     );
     if (checkResult.resultCode === 0) {
-      res.status(200).send(checkResult);
+      res.status(200).send({ token: checkResult.data.token });
     } else {
       res.sendStatus(401);
     }
