@@ -14,7 +14,8 @@ export class BloggerRepository implements IBloggerRepository {
     const bloggers: Array<any> = await bloggersCollection
       .find({ name: { $regex: searchTerm || "" } })
       .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize);
+      .limit(pageSize)
+      .select(["-_id", "-__v"]);
     return bloggers as Blogger[];
   }
   async getTotalCount(searchTerm?: string): Promise<number> {

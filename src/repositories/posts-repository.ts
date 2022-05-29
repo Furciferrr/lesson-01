@@ -56,7 +56,7 @@ export class PostRepository implements IPostRepository {
               { $match: { bloggerId } },
               { $skip: (pageNumber - 1) * pageSize },
               { $limit: pageSize },
-              { $project: { _id: 0, postId: 0 } },
+              { $project: { _id: 0, postId: 0, __v: 0 } },
             ],
             pagination: [{ $count: "totalCount" }],
           },
