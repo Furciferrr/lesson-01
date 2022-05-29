@@ -33,7 +33,7 @@ router.delete(
 
 router.post(
   "/:id/comments",
-  authMiddleware,
+  authBaseMiddleware,
   postController.createComment.bind(postController)
 );
 
