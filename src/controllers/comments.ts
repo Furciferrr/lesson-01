@@ -1,4 +1,4 @@
-import { TYPES } from './../IocTypes';
+import { TYPES } from "./../IocTypes";
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
 import { CommentDto, UserDto } from "../dto";
@@ -34,6 +34,9 @@ export class CommentsController {
       return res.status(400).send(conversionResult.error);
     }
     const comment = await this.commentService.getCommentById(req.params.id);
+    if (!comment) {
+      return res.sendStatus(404);
+    }
     //@ts-ignore
     if (comment?.userId !== req.user?.id) {
       return res.sendStatus(403);
@@ -51,6 +54,9 @@ export class CommentsController {
 
   async deleteCommentById(req: Request, res: Response) {
     const comment = await this.commentService.getCommentById(req.params.id);
+    if (!comment) {
+      return res.sendStatus(404);
+    }
 
     //@ts-ignore
     if (comment?.userId !== req.user?.id) {
