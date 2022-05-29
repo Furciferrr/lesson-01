@@ -1,11 +1,7 @@
-import { TYPES } from './../IocTypes';
+import { TYPES } from "./../IocTypes";
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
-import {
-  CommentDto,
-  PostDto,
-  UpdatePostDto,
-} from "../dto";
+import { CommentDto, PostDto, UpdatePostDto } from "../dto";
 import {
   IBloggerService,
   IBodyValidator,
@@ -101,11 +97,7 @@ export class PostController {
       req.params.id,
       req.body
     );
-    if (updatedPost) {
-      res.sendStatus(204);
-    } else {
-      res.sendStatus(404);
-    }
+    res.sendStatus(updatedPost);
   }
 
   async deletePostById(req: Request, res: Response) {
