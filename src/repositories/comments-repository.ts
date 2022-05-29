@@ -8,7 +8,7 @@ import { injectable } from "inversify";
 @injectable()
 export class CommentsRepository implements ICommentsRepository {
   async getCommentById(id: string): Promise<CommentDBType | null> {
-    return commentsCollection.findOne({ id }).select(["-_id", "-__v"]);
+    return commentsCollection.findOne({ id }).select(["-_id", "-__v", "postId"]);
   }
 
   async updateCommentById(
