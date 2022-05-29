@@ -72,7 +72,7 @@ export class UserService implements IUserService {
   async checkCredentials(
     login: string,
     password: string
-  ): Promise<{ resultCode: number; data: { token?: string | null } }> {
+  ): Promise<{ resultCode: number; data: { token?: string | null } } | any> {
     const user = await this.userRepository.getUserByLogin(login);
     if (!user) {
       return {
@@ -85,10 +85,11 @@ export class UserService implements IUserService {
 
     const token = this.generateJwt(user);
     return {
-      resultCode: resultCompare ? 0 : 1,
+      /* resultCode: resultCompare ? 0 : 1,
       data: {
         token: resultCompare ? token : null,
-      },
+      }, */
+      token: resultCompare ? token : null,
     };
   }
   private async _generateHash(password: string): Promise<string> {
