@@ -30,21 +30,19 @@ export class CommentsRepository implements ICommentsRepository {
     id: string,
     pageNumber: number,
     pageSize: number
-  ): Promise<DBType<CommentResponse>> {
-    const result = await commentsCollection.aggregate([
-      {
-        $facet: {
-          items: [
-            { $match: { postId: id } },
-            { $skip: (pageNumber - 1) * pageSize },
-            { $limit: pageSize },
-            { $project: { _id: 0, postId: 0, __v: 0 } },
-          ],
-          pagination: [{ $count: "totalCount" }],
-        },
-      },
-    ]);
-    return result[0] as DBType<CommentResponse>;
+  ): Promise<Array<CommentResponse>> {
+    const result = await commentsCollection
+      .find({ postId: id })
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .select(["-_id", "-__v"]);
+    return result;
+  }
+
+  async getTotalCount(postId: string): Promise<number> {
+    return await commentsCollection.countDocuments({
+      postId: postId,
+    });
   }
 
   async createComment(comment: CommentDBType): Promise<CommentDBType> {

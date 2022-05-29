@@ -138,6 +138,7 @@ export interface ICommentsRepository {
     id: string,
     pageNumber: number,
     pageSize: number
-  ): Promise<DBType<CommentResponse>>;
+  ): Promise<Array<CommentResponse>>;
   createComment(comment: CommentDBType): Promise<CommentDBType>;
+  getTotalCount(postId: string): Promise<number>;
 }
