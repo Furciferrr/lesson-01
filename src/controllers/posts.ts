@@ -50,7 +50,7 @@ export class PostController {
       return res.status(400).send();
     }
     //@ts-ignore
-    newPost.bloggerId = +newPost.bloggerId;
+    newPost.bloggerId = newPost.bloggerId;
     res.status(201).send(newPost);
   }
 
