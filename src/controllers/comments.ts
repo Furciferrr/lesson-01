@@ -19,7 +19,8 @@ export class CommentsController {
     if (!comment) {
       return res.status(404).send();
     }
-    res.send(comment);
+    const {postId, ...commentWithoutPostId} = comment
+    res.send(commentWithoutPostId);
   }
 
   async updateCommentById(req: Request, res: Response) {
