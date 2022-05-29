@@ -11,7 +11,7 @@ const postController = ioc.get<PostController>(TYPES.PostController);
 
 router.post(
   "/",
-  authMiddleware,
+  authBaseMiddleware,
   postController.createPost.bind(postController)
 );
 
@@ -21,13 +21,13 @@ router.get("/:id", postController.getPostById.bind(postController));
 
 router.put(
   "/:id",
-  authMiddleware,
+  authBaseMiddleware,
   postController.updatePostById.bind(postController)
 );
 
 router.delete(
   "/:id",
-  authMiddleware,
+  authBaseMiddleware,
   postController.deletePostById.bind(postController)
 );
 

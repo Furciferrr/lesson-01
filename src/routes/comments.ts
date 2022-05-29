@@ -19,7 +19,7 @@ router.put(
 
 router.delete(
   "/:id",
-  authBaseMiddleware,
+  authMiddleware,
   commentController.deleteCommentById.bind(commentController)
 );
 
