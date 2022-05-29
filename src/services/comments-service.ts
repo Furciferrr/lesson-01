@@ -45,10 +45,10 @@ export class CommentsService implements ICommentsService {
     const totalCount = await this.commentRepository.getTotalCount(id);
     const pagesCount = Math.ceil(totalCount / (pageSize || 10));
     return {
-      totalCount: totalCount,
-      pageSize: pageSize || 10,
-      page: pageNumber || 1,
       pagesCount: pagesCount,
+      page: pageNumber || 1,
+      pageSize: pageSize || 10,
+      totalCount: totalCount,
       items: resultComments,
     };
   }
