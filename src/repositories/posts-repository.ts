@@ -18,7 +18,7 @@ export class PostRepository implements IPostRepository {
     return await postsCollection.countDocuments();
   }
   async getPostById(id: string): Promise<Post | null> {
-    return postsCollection.findOne({ id }, { projection: { _id: 0 } });
+    return postsCollection.findOne({ id }).select(["-_id", "-__v"]);
   }
   async deletePostById(id: string): Promise<boolean> {
     const result = await postsCollection.deleteOne({ id });
