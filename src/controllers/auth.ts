@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { inject, injectable } from "inversify";
-import { UserDto } from "../dto";
+import { LoginUserDto, UserDto } from "../dto";
 import { IBodyValidator, IUserService } from "../interfaces";
 import { TYPES } from "../IocTypes";
 
@@ -14,7 +14,7 @@ export class AuthController {
   ) {}
   async login(req: Request, res: Response) {
     const conversionResult = await this.bodyValidator.validateAndConvert(
-      UserDto,
+      LoginUserDto,
       req.body
     );
     if (conversionResult.error) {
@@ -26,7 +26,7 @@ export class AuthController {
       req.body.password
     );
     if (checkResult.resultCode === 0) {
-      res.status(201).send(checkResult);
+      res.status(200).send(checkResult);
     } else {
       res.sendStatus(401);
     }

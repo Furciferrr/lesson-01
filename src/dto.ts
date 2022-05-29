@@ -105,6 +105,15 @@ export class UserDto {
   readonly password: string;
 }
 
+export class LoginUserDto {
+  @IsNotEmpty({ message: "username field is required" })
+  @IsNotBlank('', {message: 'should be not blank'})
+  readonly login: string;
+  @IsNotEmpty({ message: "password field is required" })
+  @IsNotBlank('', {message: 'should be not blank'})
+  readonly password: string;
+}
+
 export class CommentDto {
   @IsNotEmpty({ message: "content field is required" })
   @IsNotBlank('', {message: 'should be not blank'})
