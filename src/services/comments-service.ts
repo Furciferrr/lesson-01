@@ -42,11 +42,12 @@ export class CommentsService implements ICommentsService {
       pageNumber || 1,
       pageSize || 10
     );
+    console.log(resultComments)
     const { pagination, ...result } = resultComments;
     return {
       totalCount: pagination[0].totalCount,
-      pageSize,
-      page: pageNumber,
+      pageSize: pageSize || 10,
+      page: pageNumber || 1,
       pagesCount: Math.ceil(pagination[0].totalCount / pageSize),
       ...result,
     };

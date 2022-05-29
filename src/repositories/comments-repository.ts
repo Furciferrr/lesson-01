@@ -4,7 +4,6 @@ import { commentsCollection } from "./db-config";
 import { ICommentsRepository } from "../interfaces";
 import { injectable } from "inversify";
 
-
 @injectable()
 export class CommentsRepository implements ICommentsRepository {
   async getCommentById(id: string): Promise<CommentDBType | null> {
@@ -32,20 +31,19 @@ export class CommentsRepository implements ICommentsRepository {
     pageNumber: number,
     pageSize: number
   ): Promise<DBType<CommentResponse>> {
-    const result = await commentsCollection
-      .aggregate([
-        {
-          $facet: {
-            items: [
-              { $match: { postId: id } },
-              { $skip: (pageNumber - 1) * pageSize },
-              { $limit: pageSize },
-              { $project: { _id: 0, postId: 0 } },
-            ],
-            pagination: [{ $count: "totalCount" }],
-          },
+    const result = await commentsCollection.aggregate([
+      {
+        $facet: {
+          items: [
+            { $match: { postId: id } },
+            { $skip: (pageNumber - 1) * pageSize },
+            { $limit: pageSize },
+            { $project: { _id: 0, postId: 0, __v: 0 } },
+          ],
+          pagination: [{ $count: "totalCount" }],
         },
-      ])
+      },
+    ]);
     return result[0] as DBType<CommentResponse>;
   }
 
