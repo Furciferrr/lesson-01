@@ -26,7 +26,7 @@ function formatError(errors: ValidationError[]): ErrorType {
         field: err.property,
       };
     }),
-    resultCode: 1,
+    //resultCode: 1,
   } as any;
 }
 
@@ -65,7 +65,7 @@ export class BodyValidator {
           field: err.property,
         };
       }),
-      resultCode: 1,
+     // resultCode: 1,
     } as any;
   }
 

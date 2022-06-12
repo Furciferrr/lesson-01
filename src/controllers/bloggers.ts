@@ -72,7 +72,7 @@ export class BloggerController {
           errorsMessages: [
             { message: "bloggerId incorrect", field: "bloggerId" },
           ],
-          resultCode: 1,
+          //resultCode: 1,
         });
       }
       res.status(201).send(newBlogger);

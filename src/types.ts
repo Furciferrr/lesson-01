@@ -37,7 +37,7 @@ export interface ErrorType {
     message: string;
     field: string;
   }[];
-  resultCode: 0 | 1 | 2;
+  //resultCode: 0 | 1 | 2;
 }
 
 export interface PaginationType {
