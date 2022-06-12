@@ -18,18 +18,19 @@ export class CommentsService implements ICommentsService {
     private readonly commentRepository: ICommentsRepository
   ) {}
   async getCommentById(id: string): Promise<CommentDBType | null> {
-    return this.commentRepository.getCommentById(id);
+    const result = await this.commentRepository.getCommentById(id);
+    return result
   }
 
   async updateCommentById(
     id: string,
     commentDto: CommentDto
   ): Promise<boolean> {
-    return this.commentRepository.updateCommentById(id, commentDto);
+    return await this.commentRepository.updateCommentById(id, commentDto);
   }
 
   async deleteCommentById(id: string): Promise<boolean> {
-    return this.commentRepository.deleteCommentById(id);
+    return await this.commentRepository.deleteCommentById(id);
   }
 
   async getCommentsByPostId(

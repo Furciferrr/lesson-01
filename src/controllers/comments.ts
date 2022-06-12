@@ -19,7 +19,9 @@ export class CommentsController {
     if (!comment) {
       return res.status(404).send();
     }
+    
     const {postId, ...commentWithoutPostId} = comment
+    console.log(commentWithoutPostId)
     res.send(commentWithoutPostId);
   }
 

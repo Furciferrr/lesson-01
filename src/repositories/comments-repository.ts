@@ -7,7 +7,10 @@ import { injectable } from "inversify";
 @injectable()
 export class CommentsRepository implements ICommentsRepository {
   async getCommentById(id: string): Promise<CommentDBType | null> {
-    return await commentsCollection.findOne({ id }).select(["-_id", "-__v"]);
+    const result = await commentsCollection
+      .findOne({ id })
+      .select(["-_id", "-__v"]).lean();
+    return result;
   }
 
   async updateCommentById(
@@ -35,7 +38,7 @@ export class CommentsRepository implements ICommentsRepository {
       .find({ postId: id })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .select(["-_id", "-__v", "-postId"]);
+      .select(["-_id", "-__v", "-postId"]).lean();
     return result;
   }
 
