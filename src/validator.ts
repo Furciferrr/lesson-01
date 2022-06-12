@@ -73,6 +73,7 @@ export class BodyValidator {
     classToConvert: any,
     body: {}
   ): Promise<ValidationResult> {
+    
     const result = new ValidationResult();
 
     result.data = plainToClass(classToConvert, body);
