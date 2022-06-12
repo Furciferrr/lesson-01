@@ -35,7 +35,7 @@ export class CommentsRepository implements ICommentsRepository {
       .find({ postId: id })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
-      .select(["-_id", "-__v"]);
+      .select(["-_id", "-__v", "-postId"]);
     return result;
   }
 

@@ -38,7 +38,7 @@ export class PostController {
         errorsMessages: [
           { message: "bloggerId incorrect", field: "bloggerId" },
         ],
-        resultCode: 1,
+       // resultCode: 1,
       });
     }
     const newPost = await this.postsService.createPost(req.body);
@@ -89,7 +89,7 @@ export class PostController {
         errorsMessages: [
           { message: "bloggerId incorrect", field: "bloggerId" },
         ],
-        resultCode: 1,
+       // resultCode: 1,
       });
     }
 
