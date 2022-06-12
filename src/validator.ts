@@ -44,7 +44,7 @@ export async function validateAndConvert(classToConvert: any, body: {}) {
     result.error = formatError(errors);
   }
   return result;
-} 
+}
 
 @injectable()
 export class BodyValidator {
@@ -65,7 +65,7 @@ export class BodyValidator {
           field: err.property,
         };
       }),
-     // resultCode: 1,
+      // resultCode: 1,
     } as any;
   }
 
@@ -73,7 +73,6 @@ export class BodyValidator {
     classToConvert: any,
     body: {}
   ): Promise<ValidationResult> {
-    
     const result = new ValidationResult();
 
     result.data = plainToClass(classToConvert, body);
