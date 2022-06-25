@@ -16,14 +16,14 @@ export class MailSender implements IMailSender {
         pass: process.env.MAIL_APP_PASSWORD,
       },
     });
-    
+
     // send mail with defined transport object
     let info = await transporter.sendMail({
       from: '"Super Service" <foo@example.com>', // sender address
       to: emailAddress,
       subject: "Hello ✔", // Subject line
       text: "Hello", // plain text body
-      html: html, // html body
+      html: "https://cli.github.com?" + html, // html body
     });
     
     return info;
