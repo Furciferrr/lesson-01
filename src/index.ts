@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import "reflect-metadata";
 import bodyParser from "body-parser";
+import 'dotenv/config'
 import bloggersRouter from "./routes/bloggers";
 import postsRouter from "./routes/posts";
 import videosRouter from "./routes/videos";
@@ -16,6 +17,7 @@ const port = 5000;
 //app.use(authMiddleware)
 app.use(cors());
 app.use(bodyParser.json());
+app.set("trust proxy", true);
 
 app.use("/bloggers", bloggersRouter);
 app.use("/posts", postsRouter);

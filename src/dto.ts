@@ -1,8 +1,15 @@
-import { IsNotEmpty, Matches, IsOptional, MaxLength, MinLength } from "class-validator";
+import {
+  IsNotEmpty,
+  Matches,
+  IsOptional,
+  MaxLength,
+  MinLength,
+  IsEmail,
+} from "class-validator";
 import { IsNotBlank } from "./utils";
 export class BloggerDto {
   @IsNotEmpty({ message: "name field is required" })
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   @MinLength(1)
   @MaxLength(15)
   readonly name: string;
@@ -16,7 +23,7 @@ export class BloggerDto {
 
 export class UpdateBloggerDto {
   @IsNotEmpty({ message: "should be not empty" })
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   @MinLength(1)
   @MaxLength(15)
   readonly name: string;
@@ -31,7 +38,7 @@ export class UpdateBloggerDto {
 
 export class PostDto {
   @IsNotEmpty({ message: "title field is required" })
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   @MinLength(1)
   @MaxLength(30)
   readonly title: string;
@@ -39,7 +46,7 @@ export class PostDto {
   @MinLength(1)
   @MaxLength(100)
   readonly shortDescription: string;
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   @IsNotEmpty({ message: "content field is required" })
   @MinLength(1)
   @MaxLength(1000)
@@ -50,17 +57,17 @@ export class PostDto {
 
 export class PostDtoWithoutBlogger {
   @IsNotEmpty({ message: "title field is required" })
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   @MinLength(1)
   @MaxLength(30)
   readonly title: string;
   @IsNotEmpty({ message: "shortDescription field is required" })
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   @MinLength(1)
   @MaxLength(100)
   readonly shortDescription: string;
   @IsNotEmpty({ message: "content field is required" })
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   @MinLength(1)
   @MaxLength(1000)
   readonly content: string;
@@ -68,7 +75,7 @@ export class PostDtoWithoutBlogger {
 
 export class UpdatePostDto {
   @IsNotEmpty()
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   @MinLength(1)
   @MaxLength(30)
   readonly title: string;
@@ -76,7 +83,7 @@ export class UpdatePostDto {
   @MinLength(1)
   @MaxLength(100)
   readonly shortDescription: string;
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   @IsOptional()
   @IsNotEmpty()
   @MinLength(1)
@@ -92,14 +99,22 @@ export class VideoDto {
   readonly title: string;
 }
 
+export class ConfirmEmailDto {
+  @IsNotEmpty({ message: "code field is required" })
+  @IsNotBlank("", { message: "should be not blank" })
+  readonly code: string;
+}
+
 export class UserDto {
   @IsNotEmpty({ message: "username field is required" })
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   @MinLength(3)
   @MaxLength(10)
   readonly login: string;
+  @IsEmail({ message: "not valid email" })
+  readonly email: string;
   @IsNotEmpty({ message: "password field is required" })
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   @MinLength(6)
   @MaxLength(20)
   readonly password: string;
@@ -107,16 +122,19 @@ export class UserDto {
 
 export class LoginUserDto {
   @IsNotEmpty({ message: "username field is required" })
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   readonly login: string;
+  //@IsOptional()
+  //@IsEmail({ message: "not valid email" })
+  //readonly email: string;
   @IsNotEmpty({ message: "password field is required" })
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   readonly password: string;
 }
 
 export class CommentDto {
   @IsNotEmpty({ message: "content field is required" })
-  @IsNotBlank('', {message: 'should be not blank'})
+  @IsNotBlank("", { message: "should be not blank" })
   @MinLength(20)
   @MaxLength(300)
   readonly content: string;

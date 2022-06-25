@@ -1,10 +1,4 @@
-import {
-  Blogger,
-  CommentDBType,
-  Post,
-  UserDBType,
-  VideoType,
-} from "../types";
+import { Blogger, CommentDBType, Post, RequestAttemptType, UserDBType, VideoType } from "../types";
 import mongoose from "mongoose";
 
 export const BloggerScheme = new mongoose.Schema<Blogger>({
@@ -32,7 +26,17 @@ export const UserScheme = new mongoose.Schema<UserDBType>({
   id: { type: String, required: true },
   login: { type: String, required: true },
   hashPassword: { type: String, required: true },
+  emailConfirmation: {
+    confirmationCode: { type: String, required: true },
+    expirationDate: { type: Date, required: true },
+    isConfirmed: { type: Boolean, required: true },
+  },
 });
+
+export const RequestAttemptScheme = new mongoose.Schema<RequestAttemptType>({
+  ip: { type: String, required: true },
+  date: { type: Date, required: true },
+})
 
 export const CommentScheme = new mongoose.Schema<CommentDBType>({
   id: { type: String, required: true },

@@ -20,4 +20,9 @@ export const TYPES = {
 	UserController: Symbol.for("UserController"),
   
 	AuthController: Symbol.for("AuthController"),
+	AuthService: Symbol.for("AuthService"),
+
+	EmailAdapter: Symbol.for("EmailAdapter"),
+
+	RequestAttemptRepository: Symbol.for("RequestAttemptRepository"),
   };

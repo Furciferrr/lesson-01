@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 import { BloggerDto, CommentDto, PostDto, UpdatePostDto, UserDto } from "./dto";
 import {
   Blogger,
@@ -6,6 +7,7 @@ import {
   CommentResponse,
   DBType,
   Post,
+  RequestAttemptType,
   ResponseType,
   UserDBType,
   UserViewType,
@@ -42,6 +44,14 @@ export interface IUserRepository {
   getTotalCount(): Promise<number>;
   getUserByLogin(login: string): Promise<UserDBType | null>;
   getUserById(id: string): Promise<UserDBType | null>;
+  getUserByLoginOrEmail(
+    login: string,
+    email: string
+  ): Promise<UserDBType | null>;
+  getUserByConfirmationCode(
+    confirmationCode: string
+  ): Promise<UserDBType | null>;
+  updateUserById(user: Partial<UserDBType> & { id: string }): Promise<boolean>;
   deleteUserById(id: string): Promise<boolean>;
   createUser(user: UserDBType): Promise<UserViewType>;
 }
@@ -54,10 +64,19 @@ export interface IUserService {
   deleteUserById(id: string): Promise<boolean>;
   getUserById(id: string): Promise<UserViewType | null>;
   createUser(user: UserDto): Promise<UserViewType | null>;
+  getUserByLoginOrEmail(
+    login: string,
+    email: string
+  ): Promise<UserViewType | null>;
+  confirmEmail(code: string): Promise<boolean>;
   checkCredentials(
     login: string,
     password: string
   ): Promise<{ resultCode: number; data: { token?: string | null } }>;
+}
+
+export interface IAuthService {
+  createUser(user: UserDto): Promise<UserViewType | null>;
 }
 
 export interface IBloggerRepository {
@@ -141,4 +160,20 @@ export interface ICommentsRepository {
   ): Promise<Array<CommentResponse>>;
   createComment(comment: CommentDBType): Promise<CommentDBType>;
   getTotalCount(postId: string): Promise<number>;
+}
+
+export interface IMailSender {
+  sendEmail(
+    address: string,
+    body: string
+  ): Promise<SMTPTransport.SentMessageInfo | undefined>;
+}
+
+export interface IRequestAttemptsRepository {
+  getRequestAttemptsBetweenToDates(
+    ip: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<Array<RequestAttemptType>>;
+  createRequestAttempt(requestAttempt: RequestAttemptType): Promise<boolean>;
 }

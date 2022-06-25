@@ -6,6 +6,8 @@ import { TYPES } from "../IocTypes";
 
 const router = express.Router();
 
+
+
 const bloggerController = ioc.get<BloggerController>(TYPES.BloggerController);
 
 router.get("/", bloggerController.getBloggers.bind(bloggerController));

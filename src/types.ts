@@ -45,12 +45,23 @@ export interface PaginationType {
   pageSize?: number;
 }
 
-export interface UserViewType extends Omit<UserDBType, "hashPassword"> {}
+export interface UserViewType extends Omit<UserDBType, "hashPassword" | "emailConfirmation"> {}
 
 export interface UserDBType {
   id: string;
   login: string;
+  email: string;
   hashPassword: string;
+  emailConfirmation: {
+    confirmationCode: string;
+    expirationDate: Date;
+    isConfirmed: boolean;
+  };
+}
+
+export interface RequestAttemptType {
+  ip: string;
+  date: Date;
 }
 
 export interface ResponseType<T> {

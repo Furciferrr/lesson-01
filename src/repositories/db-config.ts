@@ -6,6 +6,7 @@ import {
   BloggerScheme,
   CommentScheme,
   PostScheme,
+  RequestAttemptScheme,
   UserScheme,
   VideoScheme,
 } from "./schemes";
@@ -18,6 +19,7 @@ export const postsCollection = mongoose.model("Posts", PostScheme);
 export const videosCollection = mongoose.model("Videos", VideoScheme);
 export const usersCollection = mongoose.model("Users", UserScheme);
 export const commentsCollection = mongoose.model("Comments", CommentScheme);
+export const requestAttemptsCollection = mongoose.model("RequestAttempts", RequestAttemptScheme);
 
 //const client = new MongoClient(url);
 //const dbName = "bloggers";

@@ -5,13 +5,16 @@ import { BloggerController } from "./controllers/bloggers";
 import { BloggerRepository } from "./repositories/bloggers-repository";
 import { Container } from "inversify";
 import {
+  IAuthService,
   IBloggerRepository,
   IBloggerService,
   IBodyValidator,
   ICommentsRepository,
   ICommentsService,
+  IMailSender,
   IPostRepository,
   IPostService,
+  IRequestAttemptsRepository,
   IUserRepository,
   IUserService,
   IVideosController,
@@ -29,6 +32,9 @@ import { UserRepository } from "./repositories/users-repository";
 import { UserController } from "./controllers/users";
 import { VideosController } from "./controllers/videos";
 import { TYPES } from "./IocTypes";
+import { MailSender } from "./adapters/email-adapter";
+import { AuthService } from "./services/auth-service";
+import { RequestAttemptsRepository } from "./repositories/requestsAttempts-repository";
 
 
 
@@ -65,5 +71,10 @@ myContainer.bind<IUserService>(TYPES.UserService).to(UserService);
 myContainer.bind<UserController>(TYPES.UserController).to(UserController);
 
 myContainer.bind<AuthController>(TYPES.AuthController).to(AuthController);
+myContainer.bind<IAuthService>(TYPES.AuthService).to(AuthService);
+
+myContainer.bind<IMailSender>(TYPES.EmailAdapter).to(MailSender);
+
+myContainer.bind<IRequestAttemptsRepository>(TYPES.RequestAttemptRepository).to(RequestAttemptsRepository);
 
 export { myContainer as ioc };
