@@ -31,6 +31,7 @@ export const securityCountAttemptsMiddleware = async (
         ip: req.ip,
         date: new Date(),
       });
+	  
       next();
     }
   } catch (e) {
