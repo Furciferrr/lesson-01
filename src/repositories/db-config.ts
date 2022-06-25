@@ -1,6 +1,3 @@
-import { UserDBType, CommentDBType } from "./../types";
-import { MongoClient } from "mongodb";
-import { Blogger, Post, VideoType } from "../types";
 import mongoose from "mongoose";
 import {
   BloggerScheme,
@@ -11,8 +8,7 @@ import {
   VideoScheme,
 } from "./schemes";
 
-const url =
-  "mongodb+srv://vadim:%25HXc-bM8Hn3Y5H%2A@cluster0.z2cpp.mongodb.net/bloggers?retryWrites=true&w=majority";
+const url = process.env.MONGODB_URL || "mongodb://localhost:27017/";
 
 export const bloggersCollection = mongoose.model("Bloggers", BloggerScheme);
 export const postsCollection = mongoose.model("Posts", PostScheme);
