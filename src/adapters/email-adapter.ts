@@ -16,6 +16,7 @@ export class MailSender implements IMailSender {
         pass: process.env.MAIL_APP_PASSWORD,
       },
     });
+    
     // send mail with defined transport object
     let info = await transporter.sendMail({
       from: '"Super Service" <foo@example.com>', // sender address
